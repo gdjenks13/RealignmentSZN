@@ -1,4 +1,3 @@
-import { useDrag } from 'react-dnd';
 import { Team } from '../types';
 
 interface Props {
@@ -6,20 +5,9 @@ interface Props {
 }
 
 export function TeamCard({ team }: Props) {
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: 'team',
-    item: { teamId: team.teamId },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  }));
-
   return (
     <div
-      ref={drag}
-      className={`p-3 rounded-md border border-gray-200 cursor-move transition-opacity ${
-        isDragging ? 'opacity-50' : ''
-      }`}
+      className="p-3 rounded-md border border-gray-200 cursor-move transition-opacity"
     >
       <div className="flex items-center gap-2">
         {/* <img
