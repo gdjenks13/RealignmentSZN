@@ -1,7 +1,7 @@
 import { atom } from 'jotai';
 import { Team } from '../types';
 
-export const aacTeamsAtom = atom<Team[]>([
+export const teamsAtom = atom<Team[]>([
   {
     teamId: 1,
     schoolName: 'Army',
@@ -11,7 +11,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -73.9558,
     nickname: 'Black Knights',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 801,
   },
   {
@@ -23,7 +23,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -80.7350,
     nickname: '49ers',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 9629,
   },
   {
@@ -35,7 +35,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -77.3645,
     nickname: 'Pirates',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 3343,
   },
   {
@@ -47,7 +47,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -80.1011,
     nickname: 'Owls',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 828,
   },
   {
@@ -59,7 +59,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -89.9373,
     nickname: 'Tigers',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 2714,
   },
   {
@@ -71,7 +71,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -76.4838,
     nickname: 'Midshipmen',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 1601,
   },
   {
@@ -83,7 +83,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -97.1527,
     nickname: 'Mean Green',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 2939,
   },
   {
@@ -95,7 +95,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -95.4018,
     nickname: 'Owls',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 5661,
   },
   {
@@ -107,7 +107,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -82.4139,
     nickname: 'Bulls',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 6984,
   },
   {
@@ -119,7 +119,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -75.1550,
     nickname: 'Owls',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 6931,
   },
   {
@@ -131,7 +131,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -90.1203,
     nickname: 'Green Wave',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 3760,
   },
   {
@@ -143,7 +143,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -95.9457,
     nickname: 'Golden Hurricane',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 622,
   },
   {
@@ -155,7 +155,7 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -86.8063,
     nickname: 'Blazers',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 2737,
   },
   {
@@ -167,12 +167,9 @@ export const aacTeamsAtom = atom<Team[]>([
     longitude: -98.6209,
     nickname: 'Roadrunners',
     logo: '',
-    conference: 'AAC',
+    conference: 'aac',
     elo: 6450,
-  }
-]);
-
-export const accTeamsAtom = atom<Team[]>([
+  },
   {
     teamId: 15,
     schoolName: 'Boston College',
@@ -182,7 +179,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -71.1685,
     nickname: 'Eagles',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 7853,
   },
   {
@@ -194,7 +191,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -82.8374,
     nickname: 'Tigers',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 2129,
   },
   {
@@ -206,7 +203,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -78.9382,
     nickname: 'Blue Devils',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 6751,
   },
   {
@@ -218,7 +215,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -84.2985,
     nickname: 'Seminoles',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 8965,
   },
   {
@@ -230,7 +227,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -84.3963,
     nickname: 'Yellow Jackets',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 1068,
   },
   {
@@ -242,7 +239,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -85.7585,
     nickname: 'Cardinals',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 1303,
   },
   {
@@ -254,7 +251,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -80.277,
     nickname: 'Hurricanes',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 1427,
   },
   {
@@ -266,7 +263,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -78.6821,
     nickname: 'Wolfpack',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 4380,
   },
   {
@@ -278,7 +275,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -79.0469,
     nickname: 'Tar Heels',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 4039,
   },
   {
@@ -290,7 +287,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -79.9608,
     nickname: 'Panthers',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 9546,
   },
   {
@@ -302,7 +299,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -76.1351,
     nickname: 'Orange',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 1094,
   },
   {
@@ -314,7 +311,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -78.508,
     nickname: 'Cavaliers',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 8679,
   },
   {
@@ -326,7 +323,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -80.4215,
     nickname: 'Hokies',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 5198,
   },
   {
@@ -338,7 +335,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -80.2796,
     nickname: 'Demon Deacons',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 1802,
   },
   {
@@ -350,7 +347,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -96.7846,
     nickname: 'Mustangs',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 5100,
   },
   {
@@ -362,7 +359,7 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -122.1697,
     nickname: 'Cardinal',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 9167,
   },
   {
@@ -374,12 +371,9 @@ export const accTeamsAtom = atom<Team[]>([
     longitude: -122.2585,
     nickname: 'Golden Bears',
     logo: '',
-    conference: 'ACC',
+    conference: 'acc',
     elo: 6755,
-  }
-]);
-
-export const big10TeamsAtom = atom<Team[]>([
+  },
   {
     teamId: 32,
     schoolName: 'Illinois',
@@ -389,7 +383,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -88.2073,
     nickname: 'Fighting Illini',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -401,7 +395,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -86.5264,
     nickname: 'Hoosiers',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -413,7 +407,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -91.5302,
     nickname: 'Hawkeyes',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -425,7 +419,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -76.9426,
     nickname: 'Terrapins',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -437,7 +431,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -83.7382,
     nickname: 'Wolverines',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -449,7 +443,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -84.4822,
     nickname: 'Spartans',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -461,7 +455,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -93.2336,
     nickname: 'Golden Gophers',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -473,7 +467,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -96.7026,
     nickname: 'Cornhuskers',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -485,7 +479,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -87.6756,
     nickname: 'Wildcats',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -497,7 +491,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -83.0194,
     nickname: 'Buckeyes',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -509,7 +503,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -123.0726,
     nickname: 'Ducks',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -521,7 +515,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -77.859,
     nickname: 'Nittany Lions',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -533,7 +527,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -86.9212,
     nickname: 'Boilermakers',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -545,7 +539,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -74.4568,
     nickname: 'Scarlet Knights',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -557,7 +551,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -118.4452,
     nickname: 'Bruins',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -569,7 +563,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -118.4957,
     nickname: 'Trojans',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -581,7 +575,7 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -122.3078,
     nickname: 'Huskies',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
   },
   {
@@ -593,12 +587,9 @@ export const big10TeamsAtom = atom<Team[]>([
     longitude: -89.4005,
     nickname: 'Badgers',
     logo: '',
-    conference: 'Big 10',
+    conference: 'big10',
     elo: 5000,
-  }
-]);
-
-export const big12TeamsAtom = atom<Team[]>([
+  },
   {
     teamId: 50,
     schoolName: 'Arizona',
@@ -608,7 +599,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -110.9501,
     nickname: 'Wildcats',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -620,7 +611,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -111.9332,
     nickname: 'Sun Devils',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -632,7 +623,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -97.1143,
     nickname: 'Bears',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -644,7 +635,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -111.6585,
     nickname: 'Cougars',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -656,7 +647,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -84.5120,
     nickname: 'Bearcats',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -668,7 +659,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -105.2659,
     nickname: 'Buffaloes',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -680,7 +671,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -95.3698,
     nickname: 'Cougars',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -692,7 +683,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -93.6458,
     nickname: 'Cyclones',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -704,7 +695,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -95.2658,
     nickname: 'Jayhawks',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -716,7 +707,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -96.5717,
     nickname: 'Wildcats',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -728,7 +719,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -97.0589,
     nickname: 'Cowboys',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -740,7 +731,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -97.3575,
     nickname: 'Horned Frogs',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -752,7 +743,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -101.8552,
     nickname: 'Red Raiders',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -764,7 +755,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -81.2001,
     nickname: 'Knights',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -776,7 +767,7 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -111.8624,
     nickname: 'Utes',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
   },
   {
@@ -788,12 +779,9 @@ export const big12TeamsAtom = atom<Team[]>([
     longitude: -79.9559,
     nickname: 'Mountaineers',
     logo: '',
-    conference: 'Big 12',
+    conference: 'big12',
     elo: 5000,
-  }
-]);
-
-export const cusaTeamsAtom = atom<Team[]>([
+  },
   {
     teamId: 66,
     schoolName: 'Florida International',
@@ -803,7 +791,7 @@ export const cusaTeamsAtom = atom<Team[]>([
     longitude: -80.3778,
     nickname: 'Panthers',
     logo: '',
-    conference: 'CUSA',
+    conference: 'cusa',
     elo: 5000,
   },
   {
@@ -815,7 +803,7 @@ export const cusaTeamsAtom = atom<Team[]>([
     longitude: -85.7625,
     nickname: 'Gamecocks',
     logo: '',
-    conference: 'CUSA',
+    conference: 'cusa',
     elo: 5000,
   },
   {
@@ -827,7 +815,7 @@ export const cusaTeamsAtom = atom<Team[]>([
     longitude: -84.5833,
     nickname: 'Owls',
     logo: '',
-    conference: 'CUSA',
+    conference: 'cusa',
     elo: 5000,
   },
   {
@@ -839,7 +827,7 @@ export const cusaTeamsAtom = atom<Team[]>([
     longitude: -79.1805,
     nickname: 'Flames',
     logo: '',
-    conference: 'CUSA',
+    conference: 'cusa',
     elo: 5000,
   },
   {
@@ -851,7 +839,7 @@ export const cusaTeamsAtom = atom<Team[]>([
     longitude: -86.3926,
     nickname: 'Blue Raiders',
     logo: '',
-    conference: 'CUSA',
+    conference: 'cusa',
     elo: 5000,
   },
   {
@@ -863,7 +851,7 @@ export const cusaTeamsAtom = atom<Team[]>([
     longitude: -106.749,
     nickname: 'Aggies',
     logo: '',
-    conference: 'CUSA',
+    conference: 'cusa',
     elo: 5000,
   },
   {
@@ -875,7 +863,7 @@ export const cusaTeamsAtom = atom<Team[]>([
     longitude: -95.5495,
     nickname: 'Bearkats',
     logo: '',
-    conference: 'CUSA',
+    conference: 'cusa',
     elo: 5000,
   },
   {
@@ -887,7 +875,7 @@ export const cusaTeamsAtom = atom<Team[]>([
     longitude: -92.6353,
     nickname: 'Bulldogs',
     logo: '',
-    conference: 'CUSA',
+    conference: 'cusa',
     elo: 5000,
   },
   {
@@ -899,7 +887,7 @@ export const cusaTeamsAtom = atom<Team[]>([
     longitude: -106.5043,
     nickname: 'Miners',
     logo: '',
-    conference: 'CUSA',
+    conference: 'cusa',
     elo: 5000,
   },
   {
@@ -911,14 +899,11 @@ export const cusaTeamsAtom = atom<Team[]>([
     longitude: -86.4436,
     nickname: 'Hilltoppers',
     logo: '',
-    conference: 'CUSA',
+    conference: 'cusa',
     elo: 5000,
-  }
-]);
-
-export const indTeamsAtom = atom<Team[]>([
+  },
   {
-    teamId: 77,
+    teamId: 76,
     schoolName: 'Notre Dame',
     city: 'Notre Dame',
     state: 'Indiana',
@@ -926,11 +911,11 @@ export const indTeamsAtom = atom<Team[]>([
     longitude: -86.2254,
     nickname: 'Fighting Irish',
     logo: '',
-    conference: 'Independent',
+    conference: 'ind',
     elo: 5000,
     },
   {
-    teamId: 76,
+    teamId: 77,
     schoolName: 'UConn',
     city: 'Storrs',
     state: 'Connecticut',
@@ -938,7 +923,7 @@ export const indTeamsAtom = atom<Team[]>([
     longitude: -72.2538,
     nickname: 'Huskies',
     logo: '',
-    conference: 'Independent',
+    conference: 'ind',
     elo: 5000,
   },
   {
@@ -950,12 +935,9 @@ export const indTeamsAtom = atom<Team[]>([
     longitude: -72.5292,
     nickname: 'Minutemen',
     logo: '',
-    conference: 'Independent',
+    conference: 'ind',
     elo: 5000,
-  }
-]);
-
-export const macTeamsAtom = atom<Team[]>([
+  },
   {
     teamId: 79,
     schoolName: 'Akron',
@@ -965,7 +947,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -81.5190,
     nickname: 'Zips',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -977,7 +959,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -85.4148,
     nickname: 'Cardinals',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -989,7 +971,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -78.8784,
     nickname: 'Bulls',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -1001,7 +983,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -83.6301,
     nickname: 'Falcons',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -1013,7 +995,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -84.7666,
     nickname: 'Chippewas',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -1025,7 +1007,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -81.0540,
     nickname: 'Eagles',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -1037,7 +1019,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -81.3431,
     nickname: 'Golden Flashes',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -1049,7 +1031,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -84.7446,
     nickname: 'RedHawks',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -1061,7 +1043,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -88.7685,
     nickname: 'Huskies',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -1073,7 +1055,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -82.1012,
     nickname: 'Bobcats',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -1085,7 +1067,7 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -83.5379,
     nickname: 'Rockets',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
   },
   {
@@ -1097,12 +1079,9 @@ export const macTeamsAtom = atom<Team[]>([
     longitude: -85.5872,
     nickname: 'Broncos',
     logo: '',
-    conference: 'MAC',
+    conference: 'mac',
     elo: 5000,
-  }
-]);
-
-export const mwTeamsAtom = atom<Team[]>([
+  },
   {
     teamId: 91,
     schoolName: 'Air Force',
@@ -1112,7 +1091,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -104.8521,
     nickname: 'Falcons',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1124,7 +1103,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -116.2146,
     nickname: 'Broncos',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1136,7 +1115,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -105.0844,
     nickname: 'Rams',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1148,7 +1127,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -119.7726,
     nickname: 'Bulldogs',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1160,7 +1139,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -157.8583,
     nickname: 'Rainbow Warriors',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1172,7 +1151,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -119.8138,
     nickname: 'Wolf Pack',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1184,7 +1163,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -106.6504,
     nickname: 'Lobos',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1196,7 +1175,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -117.1611,
     nickname: 'Aztecs',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1208,7 +1187,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -121.8863,
     nickname: 'Spartans',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1220,7 +1199,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -115.1398,
     nickname: 'Rebels',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1232,7 +1211,7 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -111.8340,
     nickname: 'Aggies',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
   },
   {
@@ -1244,12 +1223,9 @@ export const mwTeamsAtom = atom<Team[]>([
     longitude: -105.5911,
     nickname: 'Cowboys',
     logo: '',
-    conference: 'MW',
+    conference: 'mw',
     elo: 5000,
-  }
-]);
-
-export const pac12TeamsAtom = atom<Team[]>([
+  },
   {
     teamId: 103,
     schoolName: 'Oregon State',
@@ -1259,7 +1235,7 @@ export const pac12TeamsAtom = atom<Team[]>([
     longitude: -123.2620,
     nickname: 'Beavers',
     logo: '',
-    conference: 'Pac-12',
+    conference: 'pac12',
     elo: 5000,
   },
   {
@@ -1271,12 +1247,9 @@ export const pac12TeamsAtom = atom<Team[]>([
     longitude: -117.1542,
     nickname: 'Cougars',
     logo: '',
-    conference: 'Pac-12',
+    conference: 'pac12',
     elo: 5000,
-  }
-]);
-
-export const secTeamsAtom = atom<Team[]>([
+  },
   {
     teamId: 105,
     schoolName: 'Alabama',
@@ -1286,7 +1259,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -87.5469,
     nickname: 'Crimson Tide',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1298,7 +1271,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -94.1719,
     nickname: 'Razorbacks',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1310,7 +1283,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -85.4808,
     nickname: 'Tigers',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1322,7 +1295,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -82.3248,
     nickname: 'Gators',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1334,7 +1307,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -83.3730,
     nickname: 'Bulldogs',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1346,7 +1319,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -84.5051,
     nickname: 'Wildcats',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1358,7 +1331,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -91.1790,
     nickname: 'Tigers',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1370,7 +1343,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -88.7894,
     nickname: 'Bulldogs',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1382,7 +1355,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -92.3341,
     nickname: 'Tigers',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1394,7 +1367,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -89.5192,
     nickname: 'Rebels',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1406,7 +1379,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -97.4395,
     nickname: 'Sooners',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1418,7 +1391,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -81.0255,
     nickname: 'Gamecocks',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1430,7 +1403,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -83.9207,
     nickname: 'Volunteers',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1442,7 +1415,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -96.3418,
     nickname: 'Aggies',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1454,7 +1427,7 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -97.7431,
     nickname: 'Longhorns',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
   },
   {
@@ -1466,12 +1439,9 @@ export const secTeamsAtom = atom<Team[]>([
     longitude: -86.8085,
     nickname: 'Commodores',
     logo: '',
-    conference: 'SEC',
+    conference: 'sec',
     elo: 5000,
-  }
-]);
-
-export const sbcTeamsAtom = atom<Team[]>([
+  },
   {
     teamId: 121,
     schoolName: 'Appalachian State',
@@ -1481,7 +1451,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -81.6746,
     nickname: 'Mountaineers',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1493,7 +1463,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -90.7043,
     nickname: 'Red Wolves',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1505,7 +1475,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -79.0518,
     nickname: 'Chanticleers',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1517,7 +1487,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -81.7835,
     nickname: 'Eagles',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1529,7 +1499,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -84.3880,
     nickname: 'Panthers',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1541,7 +1511,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -78.8689,
     nickname: 'Dukes',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1553,7 +1523,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -92.0198,
     nickname: 'Ragin\' Cajuns',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1565,7 +1535,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -92.1193,
     nickname: 'Warhawks',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1577,7 +1547,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -82.4452,
     nickname: 'Thundering Herd',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1589,7 +1559,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -76.2852,
     nickname: 'Monarchs',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1601,7 +1571,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -88.0399,
     nickname: 'Jaguars',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1613,7 +1583,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -85.9514,
     nickname: 'Trojans',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1625,7 +1595,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -97.9414,
     nickname: 'Bobcats',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   },
   {
@@ -1637,7 +1607,7 @@ export const sbcTeamsAtom = atom<Team[]>([
     longitude: -89.3085,
     nickname: 'Golden Eagles',
     logo: '',
-    conference: 'Sun Belt',
+    conference: 'sunbelt',
     elo: 5000,
   }
 ]);

@@ -13,8 +13,8 @@ export function ConferenceCard({ conference }: Props) {
       className={`p-4 rounded-lg shadow-lg bg-white transition-colors`}
     >
       <div className="flex items-center gap-3 mb-4">
-        <h2 className="text-xl font-bold">{conference.name}</h2>
-        <img src={conference.logo} className="w-12 h-12"/>
+        {/* <h2 className="text-xl font-bold">{conference.name}</h2> */}
+        <img src={conference.logo} className="w-16 h-16"/>
         <span className="text-sm text-gray-500">
           ({teams.length} teams)
         </span>
