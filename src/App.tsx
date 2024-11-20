@@ -16,13 +16,10 @@ export function App() {
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto py-8 px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <main className="max-w-fit mx-auto py-4 px-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {conferences.map((conference) => (
-              <ConferenceCard
-                key={conference.id}
-                conference={conference}
-              />
+              <ConferenceCard key={conference.id} conference={conference} />
             ))}
           </div>
         </main>

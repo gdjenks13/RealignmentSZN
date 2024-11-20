@@ -1,3 +1,5 @@
+import { PrimitiveAtom } from "jotai";
+
 export interface Team {
   teamId: number;
   schoolName: string;
@@ -15,5 +17,5 @@ export interface Conference {
   id: string;
   name: string;
   logo: string;
-  teams: Team[];
+  teams: PrimitiveAtom<Team[]>;
 }
