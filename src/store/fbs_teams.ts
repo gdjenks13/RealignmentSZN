@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { Team } from '../types';
+import { Team } from '../types/types';
 
 export const teamsAtom = atom<Team[]>([
   {

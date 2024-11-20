@@ -1,0 +1,11 @@
+TODO:
+- Fully implement drag and drop
+- Add / Delete Conferences
+    - When deleting a conference, move teams from that conference to independent list
+    - When adding a conference, allow user to name the conference. Instantiated with no teams.
+        - Allow a user to upload their own logo
+- Add / Delete Teams
+    - A team can be added to any ConferenceCard
+    - Allow user to provide all the information. Name, City, State, Lat, Long, Nickname, Elo, etc.
+- MapBox integration
+    - Display teams on the map, pinpoints on their lat/long's.

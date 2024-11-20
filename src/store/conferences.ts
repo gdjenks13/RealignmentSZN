@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { Conference } from '../types';
+import { Conference } from '../types/types';
 import { teamsAtom } from './fbs_teams';
 
 export const conferencesAtom = atom<Conference[]>(get => {

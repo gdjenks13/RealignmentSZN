@@ -1,4 +1,4 @@
-import { Team } from '../types';
+import { Team } from '../types/types';
 
 interface Props {
   team: Team;

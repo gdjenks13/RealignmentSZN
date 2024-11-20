@@ -1,4 +1,4 @@
-import { Conference } from '../types';
+import { Conference } from '../types/types';
 import { TeamCard } from './TeamCard';
 import { useAtom } from 'jotai';
 
