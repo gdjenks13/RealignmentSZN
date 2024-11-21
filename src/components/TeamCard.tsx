@@ -25,7 +25,7 @@ export function TeamCard({ team }: TeamProps) {
 
   return (
     <div
-    ref={ref}
+      ref={ref}
       className="p-3 rounded-md border border-gray-200 cursor-move"
     >
       <div className="flex items-center gap-2">
