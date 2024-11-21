@@ -1,13 +1,32 @@
+import { useEffect, useRef, useState } from 'react';
 import { Team } from '../types/types';
+import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import invariant from 'tiny-invariant';
 
-interface Props {
+interface TeamProps {
   team: Team;
 }
 
-export function TeamCard({ team }: Props) {
+export function TeamCard({ team }: TeamProps) {
+  const ref = useRef(null);
+  const [dragging, setDragging] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    invariant(el, 'Element ref is not set');
+
+    return draggable({
+      element: el,
+      getInitialData: () => ({ type: "team", team }),
+      onDragStart: () => setDragging(true),
+      onDrop: () => setDragging(false)
+    })
+  }, [team]);
+
   return (
     <div
-      className="p-3 rounded-md border border-gray-200 cursor-move transition-opacity"
+      ref={ref}
+      className="p-3 rounded-md border border-gray-200 cursor-move"
     >
       <div className="flex items-center gap-2">
         {/* <img
@@ -15,7 +34,7 @@ export function TeamCard({ team }: Props) {
           alt={`${team.schoolName} logo`}
           className="w-8 h-8 object-contain"
         /> */}
-        <div>
+        <div className={dragging ? "opacity-50" : ""}>
           <h3 className="font-semibold text-sm">{team.schoolName}</h3>
           <p className="text-xs text-gray-500">
             {team.city}, {team.state}
@@ -25,3 +44,4 @@ export function TeamCard({ team }: Props) {
     </div>
   );
 }
+
