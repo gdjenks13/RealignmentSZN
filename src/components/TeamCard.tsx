@@ -17,7 +17,7 @@ export function TeamCard({ team }: TeamProps) {
 
     return draggable({
       element: el,
-      getInitialData: () => ({ team }),
+      getInitialData: () => ({ type: "team", team }),
       onDragStart: () => setDragging(true),
       onDrop: () => setDragging(false)
     })

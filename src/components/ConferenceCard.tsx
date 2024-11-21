@@ -4,15 +4,14 @@ import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element
 import invariant from 'tiny-invariant';
 import { useEffect, useRef, useState } from 'react';
 import conferencesData from '../data/conferences.json';
-import teamsData from '../data/teams.json';
 
 interface ConferenceProps {
   conferenceId: string;
+  teams: any;
 }
 
-export function ConferenceCard({ conferenceId }: ConferenceProps) {
+export function ConferenceCard({ conferenceId, teams }: ConferenceProps) {
   const conference = conferencesData.find(conf => conf.id === conferenceId) as Conference;
-  const teams = teamsData.filter(team => team.conference === conferenceId);
   const ref = useRef(null);
   const [hovered, setHovered] = useState(false);
 
