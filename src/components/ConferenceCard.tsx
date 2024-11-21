@@ -2,11 +2,11 @@ import { Conference } from '../types/types';
 import { TeamCard } from './TeamCard';
 import { useAtom } from 'jotai';
 
-interface Props {
+interface ConferenceProps {
   conference: Conference;
 }
 
-export function ConferenceCard({ conference }: Props) {
+export function ConferenceCard({ conference }: ConferenceProps) {
   const [teams] = useAtom(conference.teams);
   return (
     <div
