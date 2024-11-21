@@ -1,0 +1,57 @@
+[
+    {
+      "id": "aac",
+      "name": "AAC",
+      "logo": "src\\img\\aac_logo.svg"
+    },
+    {
+      "id": "acc",
+      "name": "ACC",
+      "logo": "src\\img\\acc_logo.svg"
+    },
+    {
+      "id": "big10",
+      "name": "Big Ten",
+      "logo": "src\\img\\big10_logo.svg"
+    },
+    {
+      "id": "big12",
+      "name": "Big 12",
+      "logo": "src\\img\\big12_logo.svg"
+    },
+    {
+      "id": "cusa",
+      "name": "Conference USA",
+      "logo": "src\\img\\cusa_logo.svg"
+    },
+    {
+      "id": "mac",
+      "name": "MAC",
+      "logo": "src\\img\\mac_logo.svg"
+    },
+    {
+      "id": "mw",
+      "name": "Mountain West",
+      "logo": "src\\img\\mountainwest_logo.svg"
+    },
+    {
+      "id": "pac12",
+      "name": "Pac 12",
+      "logo": "src\\img\\pac12_logo.svg"
+    },
+    {
+      "id": "sec",
+      "name": "SEC",
+      "logo": "src\\img\\sec_logo.svg"
+    },
+    {
+      "id": "sunbelt",
+      "name": "Sun Belt",
+      "logo": "src\\img\\sunbelt_logo.svg"
+    },
+    {
+      "id": "ind",
+      "name": "Independents",
+      "logo": "src\\img\\ncaa_logo.svg"
+    }
+  ]

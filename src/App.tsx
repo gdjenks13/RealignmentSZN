@@ -1,9 +1,8 @@
-import { useAtom } from 'jotai';
-import { conferencesAtom } from './store/conferences';
 import { ConferenceCard } from './components/ConferenceCard';
+import conferencesData from './data/conferences.json';
 
 export function App() {
-  const [conferences] = useAtom(conferencesAtom);
+  const conferences = conferencesData;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -16,7 +15,7 @@ export function App() {
       <main className="max-w-fit mx-auto py-4 px-2">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
           {conferences.map((conference) => (
-            <ConferenceCard key={conference.id} conference={conference} />
+            <ConferenceCard key={conference.id} conferenceId={conference.id} />
           ))}
         </div>
       </main>

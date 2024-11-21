@@ -1,16 +1,18 @@
 import { Conference } from '../types/types';
 import { TeamCard } from './TeamCard';
-import { useAtom } from 'jotai';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import invariant from 'tiny-invariant';
 import { useEffect, useRef, useState } from 'react';
+import conferencesData from '../data/conferences.json';
+import teamsData from '../data/teams.json';
 
 interface ConferenceProps {
-  conference: Conference;
+  conferenceId: string;
 }
 
-export function ConferenceCard({ conference }: ConferenceProps) {
-  const [teams] = useAtom(conference.teams);
+export function ConferenceCard({ conferenceId }: ConferenceProps) {
+  const conference = conferencesData.find(conf => conf.id === conferenceId) as Conference;
+  const teams = teamsData.filter(team => team.conference === conferenceId);
   const ref = useRef(null);
   const [hovered, setHovered] = useState(false);
 
@@ -20,6 +22,7 @@ export function ConferenceCard({ conference }: ConferenceProps) {
 
     return dropTargetForElements({
       element: el,
+      getData: () => ({ teams }),
       onDragEnter: () => setHovered(true),
       onDragLeave: () => setHovered(false),
       onDrop: () => setHovered(false)
