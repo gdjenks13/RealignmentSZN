@@ -34,7 +34,7 @@ export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, 
   return (
     <div
       ref={ref}
-      className={`p-4 rounded-lg shadow-lg ${highlighted ? "bg-red-50" : hovered ? "bg-green-100" : "bg-white"}`}
+      className={`w-56 p-4 rounded-lg shadow-lg ${highlighted ? "bg-red-50" : hovered ? "bg-green-100" : "bg-white"}`}
     >
       <div className="flex items-center gap-3 mb-4">
         {/* <h2 className="text-xl font-bold">{conference.name}</h2> */}
