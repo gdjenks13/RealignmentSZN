@@ -5,9 +5,11 @@ import invariant from 'tiny-invariant';
 
 interface TeamProps {
   team: Team;
+  onDragStart: (conference: string) => void;
+  onDragEnd: () => void;
 }
 
-export function TeamCard({ team }: TeamProps) {
+export function TeamCard({ team, onDragStart, onDragEnd }: TeamProps) {
   const ref = useRef(null);
   const [dragging, setDragging] = useState(false);
 
@@ -18,10 +20,16 @@ export function TeamCard({ team }: TeamProps) {
     return draggable({
       element: el,
       getInitialData: () => ({ type: "team", team }),
-      onDragStart: () => setDragging(true),
-      onDrop: () => setDragging(false)
-    })
-  }, [team]);
+      onDragStart: () => {
+        setDragging(true);
+        onDragStart(team.conference);
+      },
+      onDrop: () => {
+        setDragging(false);
+        onDragEnd();
+      }
+    });
+  }, [team, onDragStart, onDragEnd]);
 
   return (
     <div
@@ -34,7 +42,7 @@ export function TeamCard({ team }: TeamProps) {
           alt={`${team.schoolName} logo`}
           className="w-8 h-8 object-contain"
         /> */}
-        <div className={dragging ? "opacity-50" : ""}>
+        <div className={dragging ? "opacity-40" : ""}>
           <h3 className="font-semibold text-sm">{team.schoolName}</h3>
           <p className="text-xs text-gray-500">
             {team.city}, {team.state}
@@ -44,4 +52,3 @@ export function TeamCard({ team }: TeamProps) {
     </div>
   );
 }
-

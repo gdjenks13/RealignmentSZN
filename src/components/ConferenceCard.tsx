@@ -8,9 +8,12 @@ import conferencesData from '../data/conferences.json';
 interface ConferenceProps {
   conferenceId: string;
   teams: any;
+  highlighted: boolean;
+  onDragStart: (conference: string) => void;
+  onDragEnd: () => void;
 }
 
-export function ConferenceCard({ conferenceId, teams }: ConferenceProps) {
+export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, onDragEnd }: ConferenceProps) {
   const conference = conferencesData.find(conf => conf.id === conferenceId) as Conference;
   const ref = useRef(null);
   const [hovered, setHovered] = useState(false);
@@ -25,13 +28,13 @@ export function ConferenceCard({ conferenceId, teams }: ConferenceProps) {
       onDragEnter: () => setHovered(true),
       onDragLeave: () => setHovered(false),
       onDrop: () => setHovered(false)
-    })
-  }, [teams])
+    });
+  }, [teams]);
 
   return (
     <div
       ref={ref}
-      className={hovered ? "bg-blue-100 p-4 rounded-lg shadow-lg transition-colors" : "p-4 rounded-lg shadow-lg bg-white transition-colors"}
+      className={`p-4 rounded-lg shadow-lg ${highlighted ? "bg-red-50" : hovered ? "bg-green-100" : "bg-white"}`}
     >
       <div className="flex items-center gap-3 mb-4">
         {/* <h2 className="text-xl font-bold">{conference.name}</h2> */}
@@ -43,7 +46,7 @@ export function ConferenceCard({ conferenceId, teams }: ConferenceProps) {
       
       <div className="grid grid-cols-1 gap-3">
         {teams.map((team) => (
-          <TeamCard key={team.teamId} team={team} />
+          <TeamCard key={team.teamId} team={team} onDragStart={onDragStart} onDragEnd={onDragEnd} />
         ))}
       </div>
     </div>
