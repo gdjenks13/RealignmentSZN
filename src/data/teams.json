@@ -624,30 +624,6 @@
     "elo": 5000
   },
   {
-    "teamId": 127,
-    "schoolName": "Louisiana-Lafayette",
-    "city": "Lafayette",
-    "state": "Louisiana",
-    "latitude": 30.2241,
-    "longitude": -92.0198,
-    "nickname": "Ragin' Cajuns",
-    "logo": "",
-    "conference": "sunbelt",
-    "elo": 5000
-  },
-  {
-    "teamId": 128,
-    "schoolName": "Louisiana-Monroe",
-    "city": "Monroe",
-    "state": "Louisiana",
-    "latitude": 32.5093,
-    "longitude": -92.1193,
-    "nickname": "Warhawks",
-    "logo": "",
-    "conference": "sunbelt",
-    "elo": 5000
-  },
-  {
     "teamId": 20,
     "schoolName": "Louisville",
     "city": "Louisville",
@@ -661,7 +637,7 @@
   },
   {
     "teamId": 111,
-    "schoolName": "LSU",
+    "schoolName": "Louisiana State",
     "city": "Baton Rouge",
     "state": "Louisiana",
     "latitude": 30.396,
@@ -1005,6 +981,18 @@
     "nickname": "Rebels",
     "logo": "",
     "conference": "sec",
+    "elo": 5000
+  },
+  {
+    "teamId": 42,
+    "schoolName": "Oregon",
+    "city": "Eugene",
+    "state": "Oregon",
+    "latitude": 44.0448,
+    "longitude": -123.0726,
+    "nickname": "Ducks",
+    "logo": "",
+    "conference": "big10",
     "elo": 5000
   },
   {
@@ -1380,6 +1368,30 @@
     "elo": 5000
   },
   {
+    "teamId": 127,
+    "schoolName": "UL Lafayette",
+    "city": "Lafayette",
+    "state": "Louisiana",
+    "latitude": 30.2241,
+    "longitude": -92.0198,
+    "nickname": "Ragin' Cajuns",
+    "logo": "",
+    "conference": "sunbelt",
+    "elo": 5000
+  },
+  {
+    "teamId": 128,
+    "schoolName": "UL Monroe",
+    "city": "Monroe",
+    "state": "Louisiana",
+    "latitude": 32.5093,
+    "longitude": -92.1193,
+    "nickname": "Warhawks",
+    "logo": "",
+    "conference": "sunbelt",
+    "elo": 5000
+  },
+  {
     "teamId": 78,
     "schoolName": "UMass",
     "city": "Amherst",
@@ -1389,18 +1401,6 @@
     "nickname": "Minutemen",
     "logo": "",
     "conference": "ind",
-    "elo": 5000
-  },
-  {
-    "teamId": 42,
-    "schoolName": "University of Oregon",
-    "city": "Eugene",
-    "state": "Oregon",
-    "latitude": 44.0448,
-    "longitude": -123.0726,
-    "nickname": "Ducks",
-    "logo": "",
-    "conference": "big10",
     "elo": 5000
   },
   {
