@@ -1,4 +1,5 @@
 TODO:
+
 **NOW**
 - Store teams and conferences in objects instead of json arrays
 - Get Logos to work
@@ -12,6 +13,7 @@ TODO:
     - Light mode and dark mode ☀️🌑
 
 **SOON**
+- Drag Teams from one spot in a conference to another (currently they are always alphabetical)
 - Add / Edit / Delete Conferences
     - When adding a conference, allow user to name the conference. Instantiated with no teams
     - Edit conference pop-up shows list of each conference attribute, field to edit each. Save and cancel buttons
