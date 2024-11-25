@@ -22,7 +22,7 @@ export function TeamCard({ team, onDragStart, onDragEnd }: TeamProps) {
       getInitialData: () => ({ type: "team", team }),
       onDragStart: () => {
         setDragging(true);
-        onDragStart(team.conference);
+        onDragStart(team.conference.toString());
       },
       onDrop: () => {
         setDragging(false);
@@ -37,15 +37,15 @@ export function TeamCard({ team, onDragStart, onDragEnd }: TeamProps) {
       className="p-3 rounded-md border border-gray-200 cursor-move"
     >
       <div className="flex items-center gap-2">
-        {/* <img
+        <img
           src={team.logo}
-          alt={`${team.schoolName} logo`}
+          alt={`${team.school} logo`}
           className="w-8 h-8 object-contain"
-        /> */}
+        />
         <div className={dragging ? "opacity-40" : ""}>
-          <h3 className="font-semibold text-sm">{team.schoolName}</h3>
+          <h3 className="font-semibold text-sm">{team.school}</h3>
           <p className="text-xs text-gray-500">
-            {team.city}, {team.state}
+            {team.location.city}, {team.location.state}
           </p>
         </div>
       </div>

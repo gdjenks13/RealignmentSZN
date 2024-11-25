@@ -8,17 +8,17 @@ export function App() {
   const conferences = conferencesData;
   const teamsRef = useRef(teamsData);
   const [, setRerender] = useState(false);
-  const [highlightedConference, setHighlightedConference] = useState<string | null>(null);
+  const [highlightedConference, setHighlightedConference] = useState<number | null>(null);
 
   const handleDrop = useCallback(({ source, location }) => {
     if (location.current.dropTargets.length !== 1) {
       return;
     }
     if (source.data.type === "team") {
-      const teamId = source.data.team.teamId;
+      const teamId = source.data.team.id;
       const newConf = location.previous.dropTargets[0].data.teams[0].conference;
       const updatedTeams = teamsRef.current.map((team) => {
-        if (team.teamId === teamId) {
+        if (team.id === teamId) {
           return { ...team, conference: newConf };
         }
         return team;
@@ -36,7 +36,7 @@ export function App() {
     });
   }, [handleDrop]);
 
-  const handleDragStart = (conference: string) => {
+  const handleDragStart = (conference: number) => {
     setHighlightedConference(conference);
   };
 

@@ -1,4 +1,4 @@
-import { Conference } from '../types/types';
+import { Conference, Team } from '../types/types';
 import { TeamCard } from './TeamCard';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import invariant from 'tiny-invariant';
@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import conferencesData from '../data/conferences.json';
 
 interface ConferenceProps {
-  conferenceId: string;
-  teams: any;
+  conferenceId: number;
+  teams: Team[];
   highlighted: boolean;
   onDragStart: (conference: string) => void;
   onDragEnd: () => void;
@@ -46,7 +46,7 @@ export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, 
       
       <div className="grid grid-cols-1 gap-3">
         {teams.map((team) => (
-          <TeamCard key={team.teamId} team={team} onDragStart={onDragStart} onDragEnd={onDragEnd} />
+          <TeamCard key={team.id} team={team} onDragStart={onDragStart} onDragEnd={onDragEnd} />
         ))}
       </div>
     </div>
