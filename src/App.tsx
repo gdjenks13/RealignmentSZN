@@ -36,8 +36,8 @@ export function App() {
     });
   }, [handleDrop]);
 
-  const handleDragStart = (conference: number) => {
-    setHighlightedConference(conference);
+  const handleDragStart = (conferenceId: number) => {
+    setHighlightedConference(conferenceId);
   };
 
   const handleDragEnd = () => {

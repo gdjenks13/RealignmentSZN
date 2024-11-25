@@ -9,7 +9,7 @@ interface ConferenceProps {
   conferenceId: number;
   teams: Team[];
   highlighted: boolean;
-  onDragStart: (conference: string) => void;
+  onDragStart: (conferenceId: number) => void;
   onDragEnd: () => void;
 }
 
@@ -46,7 +46,7 @@ export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, 
       
       <div className="grid grid-cols-1 gap-3">
         {teams.map((team) => (
-          <TeamCard key={team.id} team={team} onDragStart={onDragStart} onDragEnd={onDragEnd} />
+          <TeamCard key={team.id} team={team} onDragStart={() => onDragStart(conferenceId)} onDragEnd={onDragEnd} />
         ))}
       </div>
     </div>

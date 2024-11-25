@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.team-card {
+  border: 1px solid hsl(0, 0%, 85%);
+  transition: border-color 0.5s, background-color 0.5s;
+}
+
+.team-card:hover {
+  border-color: rgba(var(--team-color-rgb));
+  background: rgba(var(--team-color-rgb), 0.1);
+}

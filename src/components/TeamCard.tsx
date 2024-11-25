@@ -9,6 +9,14 @@ interface TeamProps {
   onDragEnd: () => void;
 }
 
+function hexToRgb(hex: string) {
+  const bigint = parseInt(hex.slice(1), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `${r}, ${g}, ${b}`;
+}
+
 export function TeamCard({ team, onDragStart, onDragEnd }: TeamProps) {
   const ref = useRef(null);
   const [dragging, setDragging] = useState(false);
@@ -31,10 +39,13 @@ export function TeamCard({ team, onDragStart, onDragEnd }: TeamProps) {
     });
   }, [team, onDragStart, onDragEnd]);
 
+  const teamColorRgb = hexToRgb(team.color);
+
   return (
     <div
       ref={ref}
-      className="p-3 rounded-md border border-gray-200 cursor-move"
+      className="team-card p-3 rounded-md cursor-move"
+      style={{ '--team-color-rgb': teamColorRgb } as React.CSSProperties}
     >
       <div className="flex items-center gap-2">
         <img
