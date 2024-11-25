@@ -1,7 +1,6 @@
 TODO:
 
 **NOW**
-- Store teams and conferences in objects instead of json arrays
 - Allow user to click on a team to display a pop up with three options: "move conference", "edit team", "delete team"
     - Move conference pop-up shows list of each conference, when a conference is clicked, the selected team moves to that conference
     - Edit team pop-up shows list of each team attribute, field to edit each. save and cancel buttons

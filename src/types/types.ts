@@ -30,3 +30,7 @@ export interface Conference {
   logo: string;
   teams: Array<Team>;
 }
+
+export interface ConferenceWithTeams extends Conference {
+  teams: Team[];
+}
