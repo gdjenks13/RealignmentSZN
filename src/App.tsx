@@ -3,6 +3,7 @@ import { ConferenceCard } from './components/ConferenceCard';
 import conferencesData from './data/conferences.json';
 import teamsData from './data/teams.json';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export function App() {
   const conferences = conferencesData;
@@ -47,7 +48,12 @@ export function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-red-700 text-white py-6 px-4 shadow-lg">
-        <div className="max-w-7xl mx-auto flex justify-center">
+        <div className="max-w-full mx-auto flex justify-center items-center">
+          <Link to="/map" className="absolute left-4">
+            <button className="bg-white text-black font-bold px-4 py-2 rounded-md shadow-md hover:bg-gray-200">
+              View On Map
+            </button>
+          </Link>
           <h1 className="text-3xl font-bold">Realignment SZN</h1>
         </div>
       </header>
