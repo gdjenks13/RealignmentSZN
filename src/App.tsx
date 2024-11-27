@@ -1,9 +1,11 @@
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { ConferenceCard } from './components/ConferenceCard';
+import { Popup } from './components/Popup';
+import { EditTeamPopup } from './components/EditTeamPopup';
 import conferencesData from './data/conferences.json';
 import teamsData from './data/teams.json';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ConferenceWithTeams } from './types/types';
+import { ConferenceWithTeams, Team } from './types/types';
 
 export function App() {
   const organizedConferences = conferencesData.map(conference => ({
@@ -14,6 +16,8 @@ export function App() {
   const conferencesRef = useRef<ConferenceWithTeams[]>(organizedConferences);
   const [, setRerender] = useState(false);
   const [highlightedConference, setHighlightedConference] = useState<number | null>(null);
+  const [popup, setPopup] = useState<{ team: Team; position: { x: number; y: number } } | null>(null);
+  const [editPopup, setEditPopup] = useState<{ team: Team; position: { x: number; y: number } } | null>(null);
 
   const handleDrop = useCallback(({ source, location }) => {
     if (location.current.dropTargets.length !== 1) {
@@ -62,6 +66,55 @@ export function App() {
     setHighlightedConference(null);
   };
 
+  const handleTeamClick = (e: React.MouseEvent, team: Team) => {
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    setPopup({
+      team,
+      position: {
+        x: rect.right + 8,
+        y: rect.top
+      }
+    });
+  };
+
+  const handleMoveConference = () => {
+    // TODO
+    setPopup(null);
+  };
+
+  const handleEditDetails = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (popup) {
+      const newPopup = {
+        team: popup.team,
+        position: popup.position
+      };
+      setEditPopup(newPopup);
+      setPopup(null);
+    }
+  };
+
+  const handleDeleteTeam = (teamId: number, conferenceId: number) => {
+    const conference = conferencesRef.current.find(conf => conf.id === conferenceId);
+    if (conference) {
+      conference.teams = conference.teams.filter(team => team.id !== teamId);
+      setRerender(prev => !prev);
+    }
+    setPopup(null);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setPopup(null);
+      setEditPopup(null);
+    };
+    if (popup || editPopup) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [popup, editPopup]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-red-700 text-white py-6 px-4 shadow-lg">
@@ -80,10 +133,30 @@ export function App() {
               highlighted={highlightedConference === conference.id}
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
+              onTeamClick={handleTeamClick}
             />
           ))}
         </div>
       </main>
+
+      {popup && (
+        <Popup 
+          team={popup.team}
+          position={popup.position}
+          onClose={() => setPopup(null)}
+          onMoveConference={handleMoveConference}
+          onEditDetails={(e) => handleEditDetails(e)}
+          onDeleteTeam={() => handleDeleteTeam(popup.team.id, popup.team.conference)}
+        />
+      )}
+
+      {editPopup && (
+        <EditTeamPopup 
+          team={editPopup.team}
+          position={editPopup.position}
+          onClose={() => setEditPopup(null)}
+        />
+      )}
 
       <footer className="bg-red-700 text-white py-6 px-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex justify-end">
