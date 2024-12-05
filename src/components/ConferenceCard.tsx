@@ -11,9 +11,10 @@ interface ConferenceProps {
   highlighted: boolean;
   onDragStart: (conferenceId: number) => void;
   onDragEnd: () => void;
+  onTeamClick: (e: React.MouseEvent, team: Team) => void;
 }
 
-export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, onDragEnd }: ConferenceProps) {
+export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, onDragEnd, onTeamClick }: ConferenceProps) {
   const conference = conferencesData.find(conf => conf.id === conferenceId) as Conference;
   const ref = useRef(null);
   const [hovered, setHovered] = useState(false);
@@ -46,7 +47,9 @@ export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, 
       
       <div className="grid grid-cols-1 gap-3">
         {teams.map((team) => (
-          <TeamCard key={team.id} team={team} onDragStart={() => onDragStart(conferenceId)} onDragEnd={onDragEnd} />
+          <div key={team.id} onClick={(e) => onTeamClick(e, team)}>
+            <TeamCard team={team} onDragStart={() => onDragStart(conferenceId)} onDragEnd={onDragEnd} />
+          </div>
         ))}
       </div>
     </div>

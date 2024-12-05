@@ -1,9 +1,10 @@
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { ConferenceCard } from './components/ConferenceCard';
+import { TeamModal } from './components/modal/TeamModal';
 import conferencesData from './data/conferences.json';
 import teamsData from './data/teams.json';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ConferenceWithTeams } from './types/types';
+import { ConferenceWithTeams, Team } from './types/types';
 
 export function App() {
   const organizedConferences = conferencesData.map(conference => ({
@@ -12,8 +13,11 @@ export function App() {
   }));
 
   const conferencesRef = useRef<ConferenceWithTeams[]>(organizedConferences);
+  const deletedTeamsRef = useRef<Team[]>([]);
   const [, setRerender] = useState(false);
   const [highlightedConference, setHighlightedConference] = useState<number | null>(null);
+  const [teamModal, setTeamModal] = useState<{ team: Team; position: { x: number; y: number } } | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleDrop = useCallback(({ source, location }) => {
     if (location.current.dropTargets.length !== 1) {
@@ -62,8 +66,69 @@ export function App() {
     setHighlightedConference(null);
   };
 
+  const handleDeleteTeam = (teamId: number, conferenceId: number) => {
+    const conference = conferencesRef.current.find(conf => conf.id === conferenceId);
+    if (conference) {
+      const teamToDelete = conference.teams.find(team => team.id === teamId);
+      if (teamToDelete) {
+        deletedTeamsRef.current.push({
+          ...teamToDelete,
+          conference: -1 // Use -1 to indicate deleted status
+        });
+      }
+      
+      conference.teams = conference.teams.filter(team => team.id !== teamId);
+      setRerender(prev => !prev);
+      setTeamModal(null); // Close modal after deletion
+    }
+  };
+
+  const handleTeamClick = (e: React.MouseEvent, team: Team) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const viewportWidth = window.innerWidth;
+    const modalWidth = 192;
+  
+    let x = rect.right + 8 + scrollX;
+    if (x + modalWidth > viewportWidth) {
+      x = rect.left - modalWidth - 8 + scrollX;
+    }
+  
+    setTeamModal({
+      team,
+      position: {
+        x: x,
+        y: rect.top + scrollY
+      }
+    });
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current && 
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setTeamModal(null);
+      }
+    };
+
+    if (teamModal) {
+      // Short delay
+      setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+      }, 0);
+      
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [teamModal]);
+
   return (
     <div className="min-h-screen bg-gray-50">
+
       <header className="bg-red-700 text-white py-6 px-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex justify-center">
           <h1 className="text-3xl font-bold">Realignment SZN</h1>
@@ -80,6 +145,7 @@ export function App() {
               highlighted={highlightedConference === conference.id}
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
+              onTeamClick={(e, team) => handleTeamClick(e, team)}
             />
           ))}
         </div>
@@ -90,6 +156,17 @@ export function App() {
           <p className="text-lg">made by glenn jenkins</p>
         </div>
       </footer>
+
+      {teamModal && (
+        <div ref={modalRef}>
+          <TeamModal 
+            team={teamModal.team}
+            position={teamModal.position}
+            onClose={() => setTeamModal(null)}
+            onDeleteTeam={() => handleDeleteTeam(teamModal.team.id, teamModal.team.conference)}
+          />
+        </div>
+      )}
     </div>
   );
 }
