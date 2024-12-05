@@ -11,10 +11,9 @@ interface ConferenceProps {
   highlighted: boolean;
   onDragStart: (conferenceId: number) => void;
   onDragEnd: () => void;
-  onTeamClick: (e: React.MouseEvent, team: Team) => void;
 }
 
-export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, onDragEnd, onTeamClick }: ConferenceProps) {
+export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, onDragEnd }: ConferenceProps) {
   const conference = conferencesData.find(conf => conf.id === conferenceId) as Conference;
   const ref = useRef(null);
   const [hovered, setHovered] = useState(false);
@@ -38,7 +37,8 @@ export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, 
       className={`w-56 p-4 rounded-lg shadow-lg ${highlighted ? "bg-red-50" : hovered ? "bg-green-100" : "bg-white"}`}
     >
       <div className="flex items-center gap-3 mb-4">
-        <img src={conference.logo} className="w-16 h-16" alt={conference.name}/>
+        {/* <h2 className="text-xl font-bold">{conference.name}</h2> */}
+        <img src={conference.logo} className="w-16 h-16"/>
         <span className="text-sm text-gray-500">
           ({teams.length} teams)
         </span>
@@ -46,13 +46,7 @@ export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, 
       
       <div className="grid grid-cols-1 gap-3">
         {teams.map((team) => (
-          <div key={team.id} onClick={(e) => onTeamClick(e, team)}>
-            <TeamCard 
-              team={team} 
-              onDragStart={() => onDragStart(conferenceId)} 
-              onDragEnd={onDragEnd} 
-            />
-          </div>
+          <TeamCard key={team.id} team={team} onDragStart={() => onDragStart(conferenceId)} onDragEnd={onDragEnd} />
         ))}
       </div>
     </div>
