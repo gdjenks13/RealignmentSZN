@@ -1,13 +1,11 @@
 TODO:
-
 **NOW**
-- Allow user to click on a team to display a pop up with three options: "move conference", "edit team", "delete team"
-    - Move conference pop-up shows list of each conference, when a conference is clicked, the selected team moves to that conference
-    - Edit team pop-up shows list of each team attribute, field to edit each. save and cancel buttons
-    - delete team pop-up shows "are you sure?", then delete and cancel buttons
-- Add team. Allow user to provide all the attributes. Name, City, State, Lat, Long, Nickname, Elo, Logo, etc.
-- Improve styling
-    - Light mode and dark mode ☀️🌑
+- Add team
+    - Allow user to provide all the attributes
+- Access deleted teams and put them back into a conference
+- Export
+    - json file
+    - .zip with png's of each conference
 
 **SOON**
 - Drag Teams from one spot in a conference to another (currently they are always alphabetical)
@@ -18,16 +16,12 @@ TODO:
 - Show / Hide conferences
     - Maybe show power conferences only. Could be an option
 - View a webpage of a single conference, with more information visible
-- Add Teams
-    - Add button on each conference card.
-- Export
-    - json file
+- Improve styling
+    - Light mode and dark mode ☀️🌑
 
 **LATER**
 - MapBox integration
     - Display teams on the map, pinpoints on their lat/long's
-- Export
-    - .zip with png's of each conference
 
 **MUCH LATER**
 - Simulate a season
