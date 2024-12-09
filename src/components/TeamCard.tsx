@@ -5,6 +5,7 @@ import invariant from 'tiny-invariant';
 
 interface TeamProps {
   team: Team;
+  onTeamClick: (e: React.MouseEvent, team: Team) => void;
   onDragStart: (conference: string) => void;
   onDragEnd: () => void;
 }
@@ -17,8 +18,8 @@ function hexToRgb(hex: string) {
   return `${r}, ${g}, ${b}`;
 }
 
-export function TeamCard({ team, onDragStart, onDragEnd }: TeamProps) {
-  const ref = useRef(null);
+export function TeamCard({ team, onTeamClick, onDragStart, onDragEnd }: TeamProps) {
+  const ref = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
@@ -44,7 +45,11 @@ export function TeamCard({ team, onDragStart, onDragEnd }: TeamProps) {
   return (
     <div
       ref={ref}
-      className="team-card p-3 rounded-md cursor-move"
+      onClick={(e) => {
+        e.stopPropagation();
+        onTeamClick(e, team);
+      }}
+      className="team-card p-3 rounded-md cursor-pointer"
       style={{ '--team-color-rgb': teamColorRgb } as React.CSSProperties}
     >
       <div className="flex items-center gap-2">

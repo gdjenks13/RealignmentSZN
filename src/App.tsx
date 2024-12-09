@@ -1,174 +1,171 @@
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { ConferenceCard } from './components/ConferenceCard';
 import { TeamModal } from './components/modal/TeamModal';
+import { ConferenceMoveModal } from './components/modal/ConferenceMoveModal';
 import conferencesData from './data/conferences.json';
 import teamsData from './data/teams.json';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ConferenceWithTeams, Team } from './types/types';
+import { EditTeamDetailsModal } from './components/modal/EditTeamDetailsModal';
+
+// Custom hook for team management
+const useTeamManagement = (initialConferences: ConferenceWithTeams[]) => {
+  const [conferences, setConferences] = useState(initialConferences);
+  const [, setDeletedTeams] = useState<Team[]>([]);
+
+  const moveTeam = (teamId: number, newConfId: number) => {
+    setConferences(prevConfs => {
+      const team = prevConfs.flatMap(conf => conf.teams).find(t => t.id === teamId);
+      if (!team) return prevConfs;
+
+      return prevConfs.map(conf => ({
+        ...conf,
+        teams: conf.id === newConfId
+          ? [...conf.teams.filter(t => t.id !== teamId), { ...team, conference: newConfId }].sort((a, b) => a.id - b.id)
+          : conf.teams.filter(t => t.id !== teamId)
+      }));
+    });
+  };
+
+  const updateTeam = (updatedTeam: Team) => {
+    setConferences(prevConfs => 
+      prevConfs.map(conf => ({
+        ...conf,
+        teams: conf.teams.map(team => 
+          team.id === updatedTeam.id ? updatedTeam : team
+        )
+      }))
+    );
+  };
+
+  const deleteTeam = (teamId: number) => {
+    setConferences(prevConfs => {
+      const conf = prevConfs.find(c => c.teams.some(t => t.id === teamId));
+      if (!conf) return prevConfs;
+
+      const team = conf.teams.find(t => t.id === teamId);
+      if (team) {
+        setDeletedTeams(prev => [...prev, { ...team, conference: -1 }]);
+      }
+
+      return prevConfs.map(c => ({
+        ...c,
+        teams: c.teams.filter(t => t.id !== teamId)
+      }));
+    });
+  };
+
+  return { conferences, moveTeam, updateTeam, deleteTeam };
+};
 
 export function App() {
-  const organizedConferences = conferencesData.map(conference => ({
-    ...conference,
-    teams: teamsData.filter(team => team.conference === conference.id)
-  }));
+  const { conferences, moveTeam, updateTeam, deleteTeam } = useTeamManagement(
+    conferencesData.map(conference => ({
+      ...conference,
+      teams: teamsData.filter(team => team.conference === conference.id)
+    }))
+  );
 
-  const conferencesRef = useRef<ConferenceWithTeams[]>(organizedConferences);
-  const deletedTeamsRef = useRef<Team[]>([]);
-  const [, setRerender] = useState(false);
   const [highlightedConference, setHighlightedConference] = useState<number | null>(null);
   const [teamModal, setTeamModal] = useState<{ team: Team; position: { x: number; y: number } } | null>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [editModal, setEditModal] = useState<{ team: Team; position: { x: number; y: number } } | null>(null);
+  const [moveModal, setMoveModal] = useState<{ team: Team; position: { x: number; y: number } } | null>(null);
 
   const handleDrop = useCallback(({ source, location }) => {
-    if (location.current.dropTargets.length !== 1) {
-      return;
-    }
-    if (source.data.type === "team") {
-      // get teamId and conferenceId for the conference team is moved to
-      const teamId = source.data.team.id;
-      const newConfId = location.previous.dropTargets[0].data.teams[0].conference;
-
-      // get the full objects for the team, new conference, and old conference
-      const team = conferencesRef.current
-        .flatMap(conference => conference.teams)
-        .find(team => team.id === teamId);
-      if (!team) {
-        return;
-      }
-      
-      // Remove team from old conference
-      const oldConf = conferencesRef.current[team.conference - 1];
-      oldConf.teams = oldConf.teams.filter(team => team.id !== teamId);
-      conferencesRef.current[team.conference - 1] = oldConf;
-
-      // Add team to new conference
-      team.conference = newConfId;
-      const newConf = conferencesRef.current[newConfId - 1];
-      newConf.teams.push(team);
-      newConf.teams.sort((a, b) => a.id - b.id);
-      conferencesRef.current[newConfId - 1] = newConf;
-      
-      setRerender(prev => !prev);
-    }
-  }, []);
+    if (!location.current.dropTargets.length || source.data.type !== "team") return;
+    const newConfId = location.current.dropTargets[0].data.conferenceId;
+    moveTeam(source.data.team.id, newConfId);
+  }, [moveTeam]);
 
   useEffect(() => {
-    return monitorForElements({
-      onDrop: handleDrop,
-    });
+    return monitorForElements({ onDrop: handleDrop });
   }, [handleDrop]);
 
-  const handleDragStart = (conferenceId: number) => {
-    setHighlightedConference(conferenceId);
-  };
-
-  const handleDragEnd = () => {
-    setHighlightedConference(null);
-  };
-
-  const handleDeleteTeam = (teamId: number, conferenceId: number) => {
-    const conference = conferencesRef.current.find(conf => conf.id === conferenceId);
-    if (conference) {
-      const teamToDelete = conference.teams.find(team => team.id === teamId);
-      if (teamToDelete) {
-        deletedTeamsRef.current.push({
-          ...teamToDelete,
-          conference: -1 // Use -1 to indicate deleted status
-        });
-      }
-      
-      conference.teams = conference.teams.filter(team => team.id !== teamId);
-      setRerender(prev => !prev);
-      setTeamModal(null); // Close modal after deletion
-    }
-  };
-
-  const handleTeamClick = (e: React.MouseEvent, team: Team) => {
+  const calculateModalPosition = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
-    const viewportWidth = window.innerWidth;
     const modalWidth = 192;
-  
-    let x = rect.right + 8 + scrollX;
-    if (x + modalWidth > viewportWidth) {
-      x = rect.left - modalWidth - 8 + scrollX;
+    let x = rect.right + 8 + window.scrollX;
+    
+    if (x + modalWidth > window.innerWidth) {
+      x = rect.left - modalWidth - 8 + window.scrollX;
     }
-  
-    setTeamModal({
-      team,
-      position: {
-        x: x,
-        y: rect.top + scrollY
-      }
-    });
-  };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current && 
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        setTeamModal(null);
-      }
+    return {
+      x,
+      y: rect.top + window.scrollY
     };
-
-    if (teamModal) {
-      // Short delay
-      setTimeout(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-      }, 0);
-      
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [teamModal]);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       <header className="bg-red-700 text-white py-6 px-4 shadow-lg">
-        <div className="max-w-7xl mx-auto flex justify-center">
-          <h1 className="text-3xl font-bold">Realignment SZN</h1>
-        </div>
+        <h1 className="text-3xl font-bold text-center">Realignment SZN</h1>
       </header>
 
       <main className="max-w-fit mx-auto py-4 px-2">
         <div className="flex flex-wrap justify-center gap-4">
-          {conferencesRef.current.map((conference) => (
+          {conferences.map(conference => (
             <ConferenceCard 
               key={conference.id}
               conferenceId={conference.id} 
               teams={conference.teams}
               highlighted={highlightedConference === conference.id}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              onTeamClick={(e, team) => handleTeamClick(e, team)}
+              onDragStart={() => setHighlightedConference(conference.id)}
+              onDragEnd={() => setHighlightedConference(null)}
+              onTeamClick={(e, team) => setTeamModal({ team, position: calculateModalPosition(e) })}
             />
           ))}
         </div>
       </main>
 
-      <footer className="bg-red-700 text-white py-6 px-4 shadow-lg">
-        <div className="max-w-7xl mx-auto flex justify-end">
-          <p className="text-lg">made by glenn jenkins</p>
-        </div>
-      </footer>
-
       {teamModal && (
-        <div ref={modalRef}>
-          <TeamModal 
-            team={teamModal.team}
-            position={teamModal.position}
-            onClose={() => setTeamModal(null)}
-            onDeleteTeam={() => handleDeleteTeam(teamModal.team.id, teamModal.team.conference)}
-          />
-        </div>
+        <TeamModal 
+          team={teamModal.team}
+          position={teamModal.position}
+          onClose={() => setTeamModal(null)}
+          onMoveConference={() => {
+            setTeamModal(null);
+            setMoveModal(teamModal);
+          }}
+          onEditDetails={() => {
+            setTeamModal(null);
+            setEditModal(teamModal);
+          }}
+          onDeleteTeam={() => {
+            deleteTeam(teamModal.team.id);
+            setTeamModal(null);
+          }}
+        />
       )}
+
+      {moveModal && (
+        <ConferenceMoveModal
+          team={moveModal.team}
+          conferences={conferences}
+          position={moveModal.position}
+          onMove={(confId) => {
+            moveTeam(moveModal.team.id, confId);
+            setMoveModal(null);
+          }}
+          onClose={() => setMoveModal(null)}
+        />
+      )}
+
+      {editModal && (
+        <EditTeamDetailsModal
+          team={editModal.team}
+          position={editModal.position}
+          onSave={(updatedTeam) => {
+            updateTeam(updatedTeam);
+            setEditModal(null);
+          }}
+          onClose={() => setEditModal(null)}
+        />
+      )}
+
+      <footer className="bg-red-700 text-white py-6 px-4 shadow-lg">
+        <p className="text-lg text-right">made by glenn jenkins</p>
+      </footer>
     </div>
   );
 }
-
-export default App;

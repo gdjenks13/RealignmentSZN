@@ -14,10 +14,8 @@ interface ConferenceProps {
   onTeamClick: (e: React.MouseEvent, team: Team) => void;
 }
 
-export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, onDragEnd, onTeamClick }: ConferenceProps) {
-  const conference = conferencesData.find(conf => conf.id === conferenceId) as Conference;
-  const ref = useRef(null);
-  const [hovered, setHovered] = useState(false);
+const useDropTarget = (conferenceId: number, teams: Team[], onHoverChange: (isHovered: boolean) => void) => {
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -25,32 +23,82 @@ export function ConferenceCard({ conferenceId, teams, highlighted, onDragStart, 
 
     return dropTargetForElements({
       element: el,
-      getData: () => ({ teams }),
-      onDragEnter: () => setHovered(true),
-      onDragLeave: () => setHovered(false),
-      onDrop: () => setHovered(false)
+      getData: () => ({ conferenceId, teams }),
+      onDragEnter: () => onHoverChange(true),
+      onDragLeave: () => onHoverChange(false),
+      onDrop: () => onHoverChange(false)
     });
-  }, [teams]);
+  }, [conferenceId, teams, onHoverChange]);
+
+  return ref;
+};
+
+const ConferenceHeader = ({ conference, teamsCount }: { conference: Conference; teamsCount: number }) => (
+  <div className="flex items-center gap-3 mb-4">
+    <img 
+      src={conference.logo} 
+      alt={`${conference.name}`}
+      className="w-16 h-16 object-contain"
+    />
+    <div className="flex flex-col">
+      <span className="text-sm text-gray-500">
+        ({teamsCount} teams)
+      </span>
+    </div>
+  </div>
+);
+
+export function ConferenceCard({ 
+  conferenceId, 
+  teams, 
+  highlighted, 
+  onDragStart, 
+  onDragEnd, 
+  onTeamClick 
+}: ConferenceProps) {
+  const [hovered, setHovered] = useState(false);
+  const conference = conferencesData.find(conf => conf.id === conferenceId) as Conference;
+  
+  if (!conference) {
+    throw new Error(`Conference with id ${conferenceId} not found`);
+  }
+
+  const ref = useDropTarget(conferenceId, teams, setHovered);
+
+  const getBackgroundColor = () => {
+    if (highlighted) return "bg-red-50";
+    if (hovered) return "bg-green-100";
+    return "bg-white";
+  };
 
   return (
     <div
       ref={ref}
-      className={`w-56 p-4 rounded-lg shadow-lg ${highlighted ? "bg-red-50" : hovered ? "bg-green-100" : "bg-white"}`}
+      className={`w-56 p-4 rounded-lg shadow-lg transition-colors ${getBackgroundColor()}`}
+      role="region"
+      aria-label={`${conference.name} conference section`}
     >
-      <div className="flex items-center gap-3 mb-4">
-        {/* <h2 className="text-xl font-bold">{conference.name}</h2> */}
-        <img src={conference.logo} className="w-16 h-16"/>
-        <span className="text-sm text-gray-500">
-          ({teams.length} teams)
-        </span>
-      </div>
+      <ConferenceHeader 
+        conference={conference} 
+        teamsCount={teams.length} 
+      />
       
-      <div className="grid grid-cols-1 gap-3">
-        {teams.map((team) => (
-          <div key={team.id} onClick={(e) => onTeamClick(e, team)}>
-            <TeamCard team={team} onDragStart={() => onDragStart(conferenceId)} onDragEnd={onDragEnd} />
-          </div>
+      <div className="space-y-2">
+        {teams.map(team => (
+          <TeamCard
+            key={team.id}
+            team={team}
+            onTeamClick={onTeamClick}
+            onDragStart={() => onDragStart(conferenceId)}
+            onDragEnd={onDragEnd}
+          />
         ))}
+        
+        {teams.length === 0 && (
+          <div className="text-center py-4 text-gray-400">
+            No teams in conference
+          </div>
+        )}
       </div>
     </div>
   );
