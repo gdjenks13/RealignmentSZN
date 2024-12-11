@@ -1,20 +1,17 @@
 TODO:
 **NOW**
-- Add team
-    - Allow user to provide all the attributes
-- Access deleted teams and put them back into a conference
 - Export
     - json file
     - .zip with png's of each conference
+- Drag Teams from one spot in a conference to another (currently they are always alphabetical)
+- Show / Hide conferences
+    - Maybe show power conferences only. Could be an option
 
 **SOON**
-- Drag Teams from one spot in a conference to another (currently they are always alphabetical)
 - Add / Edit / Delete Conferences
     - When adding a conference, allow user to name the conference. Instantiated with no teams
     - Edit conference pop-up shows list of each conference attribute, field to edit each. Save and cancel buttons
     - When deleting a conference, move teams from that conference to independent list
-- Show / Hide conferences
-    - Maybe show power conferences only. Could be an option
 - View a webpage of a single conference, with more information visible
 - Improve styling
     - Light mode and dark mode ☀️🌑
