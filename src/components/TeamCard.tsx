@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { Team } from '../types/types';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import invariant from 'tiny-invariant';
+import { useEffect, useRef, useState } from "react";
+import { Team } from "../types/types";
+import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import invariant from "tiny-invariant";
 
 interface TeamProps {
   team: Team;
@@ -18,13 +18,18 @@ function hexToRgb(hex: string) {
   return `${r}, ${g}, ${b}`;
 }
 
-export function TeamCard({ team, onTeamClick, onDragStart, onDragEnd }: TeamProps) {
+export function TeamCard({
+  team,
+  onTeamClick,
+  onDragStart,
+  onDragEnd,
+}: TeamProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
-    invariant(el, 'Element ref is not set');
+    invariant(el, "Element ref is not set");
 
     return draggable({
       element: el,
@@ -36,7 +41,7 @@ export function TeamCard({ team, onTeamClick, onDragStart, onDragEnd }: TeamProp
       onDrop: () => {
         setDragging(false);
         onDragEnd();
-      }
+      },
     });
   }, [team, onDragStart, onDragEnd]);
 
@@ -50,14 +55,25 @@ export function TeamCard({ team, onTeamClick, onDragStart, onDragEnd }: TeamProp
         onTeamClick(e, team);
       }}
       className="team-card p-3 rounded-md cursor-pointer"
-      style={{ '--team-color-rgb': teamColorRgb } as React.CSSProperties}
+      style={{ "--team-color-rgb": teamColorRgb } as React.CSSProperties}
     >
       <div className="flex items-center gap-2">
-        <img
-          src={team.logo}
-          alt={`${team.school} logo`}
-          className="w-8 h-8 object-contain"
-        />
+        {team.logo ? (
+          <img
+            src={team.logo}
+            alt={`${team.school} logo`}
+            className="w-8 h-8 object-contain"
+          />
+        ) : (
+          <div
+            className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"
+            style={{ backgroundColor: team.color, color: team.alt_color }}
+          >
+            <span className="text-base font-bold">
+              {team.school.charAt(0).toUpperCase()}
+            </span>
+          </div>
+        )}
         <div className={dragging ? "opacity-40" : ""}>
           <h3 className="font-semibold text-sm">{team.school}</h3>
           <p className="text-xs text-gray-500">

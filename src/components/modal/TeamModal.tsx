@@ -11,17 +11,15 @@ interface TeamModalProps {
 
 export function TeamModal({ team, position, onMoveConference, onEditDetails, onDeleteTeam }: TeamModalProps) {
   const handleMoveConference = (e: React.MouseEvent) => {
-    console.log(`Moving team ${team.school} to new conference`);
+    e.stopPropagation();
     onMoveConference?.(e);
   };
 
   const handleEditDetails = (e: React.MouseEvent) => {
-    console.log(`Editing details for ${team.school}`);
     onEditDetails?.(e);
   };
 
   const handleDeleteTeam = () => {
-    console.log(`Deleting team ${team.school}`);
     onDeleteTeam?.();
   };
 
