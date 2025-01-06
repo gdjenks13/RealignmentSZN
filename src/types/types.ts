@@ -28,9 +28,5 @@ export interface Conference {
   abbreviation: string;
   classification: string;
   logo: string;
-  teams: Array<Team>;
-}
-
-export interface ConferenceWithTeams extends Conference {
   teams: Team[];
 }

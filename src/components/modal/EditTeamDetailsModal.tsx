@@ -1,16 +1,23 @@
-import { Team, Location } from '../../types/types';
-import { useState, useCallback } from 'react';
-import { US_STATES } from '../../data/states';
+import { Team, Location } from "../../types/types";
+import { useState, useCallback } from "react";
+import { US_STATES } from "../../data/states";
 
 interface EditTeamDetailsModalProps {
   team: Team;
+  conferences: { id: number; name: string }[];
   position: { x: number; y: number };
   onSave: (updatedTeam: Team) => void;
   onClose: () => void;
 }
 
-export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTeamDetailsModalProps) {
-  const [formData, setFormData] = useState<Omit<Team, 'id'>>({
+export function EditTeamDetailsModal({
+  team,
+  conferences,
+  position,
+  onSave,
+  onClose,
+}: EditTeamDetailsModalProps) {
+  const [formData, setFormData] = useState<Omit<Team, "id">>({
     school: team.school,
     mascot: team.mascot,
     abbreviation: team.abbreviation,
@@ -21,71 +28,78 @@ export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTe
     logo: team.logo,
     alt_logo: team.alt_logo,
     location: { ...team.location },
-    elo: team.elo
+    elo: team.elo,
   });
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    
-    if (name === 'elo') {
-      const numValue = parseInt(value, 10) || 1;
-      const clampedValue = Math.min(Math.max(numValue, 1), 3000);
-      setFormData(prev => ({ ...prev, elo: clampedValue }));
-      return;
-    }
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value } = e.target;
 
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.') as [keyof Team, keyof Location];
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...(prev[parent] as Location),
-          [child]: child === 'latitude' || child === 'longitude' 
-            ? parseFloat(value) || 0
-            : value
-        }
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: name === 'conference' 
-          ? parseInt(value, 10) || 0 
-          : value
-      }));
-    }
-  }, []);
+      if (name === "elo") {
+        const numValue = parseInt(value, 10) || 1;
+        const clampedValue = Math.min(Math.max(numValue, 1), 3000);
+        setFormData((prev) => ({ ...prev, elo: clampedValue }));
+        return;
+      }
 
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
+      if (name.includes(".")) {
+        const [parent, child] = name.split(".") as [keyof Team, keyof Location];
+        setFormData((prev) => ({
+          ...prev,
+          [parent]: {
+            ...(prev[parent] as Location),
+            [child]:
+              child === "latitude" || child === "longitude"
+                ? parseFloat(value) || 0
+                : value,
+          },
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: name === "conference" ? parseInt(value, 10) || 0 : value,
+        }));
+      }
+    },
+    []
+  );
 
-    // Validate required fields
-    const requiredFields = ['school', 'mascot', 'abbreviation', 'conference'];
-    const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (missingFields.length > 0) {
-      alert(`Please fill in required fields: ${missingFields.join(', ')}`);
-      return;
-    }
+      // Validate required fields
+      const requiredFields = ["school", "mascot", "abbreviation", "conference"];
+      const missingFields = requiredFields.filter(
+        (field) => !formData[field as keyof typeof formData]
+      );
 
-    onSave({ id: team.id, ...formData });
-  }, [formData, team.id, onSave]);
+      if (missingFields.length > 0) {
+        alert(`Please fill in required fields: ${missingFields.join(", ")}`);
+        return;
+      }
+
+      onSave({ id: team.id, ...formData });
+    },
+    [formData, team.id, onSave]
+  );
 
   const modalStyle = {
     top: position.y,
     left: position.x,
-    maxHeight: 'calc(100vh - 40px)',
-    overflow: 'auto'
+    maxHeight: "calc(100vh - 40px)",
+    overflow: "auto",
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       onClick={onClose}
     >
-      <div 
+      <div
         className="bg-white rounded-lg p-6 max-w-2xl w-full"
         style={modalStyle}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-2xl font-bold mb-4">Edit Team Details</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -111,7 +125,9 @@ export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTe
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Abbreviation</label>
+              <label className="block text-sm font-medium mb-1">
+                Abbreviation
+              </label>
               <input
                 type="text"
                 name="abbreviation"
@@ -125,7 +141,7 @@ export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTe
               <input
                 type="text"
                 name="division"
-                value={formData.division || ''}
+                value={formData.division || ""}
                 onChange={handleInputChange}
                 className="w-full border rounded p-2"
               />
@@ -134,7 +150,9 @@ export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTe
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Primary Color</label>
+              <label className="block text-sm font-medium mb-1">
+                Primary Color
+              </label>
               <div className="flex items-center gap-2">
                 <input
                   type="color"
@@ -155,7 +173,9 @@ export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTe
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Alternate Color</label>
+              <label className="block text-sm font-medium mb-1">
+                Alternate Color
+              </label>
               <div className="flex items-center gap-2">
                 <input
                   type="color"
@@ -189,7 +209,9 @@ export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTe
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Alt Logo URL</label>
+              <label className="block text-sm font-medium mb-1">
+                Alt Logo URL
+              </label>
               <input
                 type="text"
                 name="alt_logo"
@@ -202,7 +224,9 @@ export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTe
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">ELO Rating</label>
+              <label className="block text-sm font-medium mb-1">
+                ELO Rating
+              </label>
               <input
                 type="number"
                 name="elo"
@@ -214,14 +238,23 @@ export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTe
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Conference ID</label>
-              <input
-                type="number"
+              <label className="block text-sm font-medium mb-1">
+                Conference
+              </label>
+              <select
                 name="conference"
                 value={formData.conference}
                 onChange={handleInputChange}
                 className="w-full border rounded p-2"
-              />
+                required
+              >
+                <option value="">Select a conference...</option>
+                {conferences.map((conf) => (
+                  <option key={conf.id} value={conf.id}>
+                    {conf.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -251,22 +284,24 @@ export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTe
               <div>
                 <label className="block text-sm font-medium mb-1">State</label>
                 <select
-                    name="location.state"
-                    value={formData.location.state}
-                    onChange={handleInputChange}
-                    className="w-full border rounded p-2"
-                    required
+                  name="location.state"
+                  value={formData.location.state}
+                  onChange={handleInputChange}
+                  className="w-full border rounded p-2"
+                  required
                 >
-                    <option value="">Select a state...</option>
-                    {US_STATES.map(({ code, name }) => (
-                        <option key={code} value={code}>
-                        {code} - {name}
-                        </option>
-                    ))}
-                    </select>
+                  <option value="">Select a state...</option>
+                  {US_STATES.map(({ code, name }) => (
+                    <option key={code} value={code}>
+                      {code} - {name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Latitude</label>
+                <label className="block text-sm font-medium mb-1">
+                  Latitude
+                </label>
                 <input
                   type="number"
                   step="any"
@@ -277,7 +312,9 @@ export function EditTeamDetailsModal({ team, position, onSave, onClose }: EditTe
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Longitude</label>
+                <label className="block text-sm font-medium mb-1">
+                  Longitude
+                </label>
                 <input
                   type="number"
                   step="any"

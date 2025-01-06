@@ -5,13 +5,13 @@ import { ConferenceMoveModal } from "./components/modal/ConferenceMoveModal";
 import conferencesData from "./data/conferences.json";
 import teamsData from "./data/teams.json";
 import { useCallback, useEffect, useState } from "react";
-import { ConferenceWithTeams, Team } from "./types/types";
+import { Conference, Team } from "./types/types";
 import { EditTeamDetailsModal } from "./components/modal/EditTeamDetailsModal";
 import { AddTeamModal } from "./components/modal/AddTeamModal";
 import { RestoreTeamsModal } from "./components/modal/RestoreTeamModal";
 
 // Custom hook for team management
-const useTeamManagement = (initialConferences: ConferenceWithTeams[]) => {
+const useTeamManagement = (initialConferences: Conference[]) => {
   const [conferences, setConferences] = useState(initialConferences);
   const [deletedTeams, setDeletedTeams] = useState<Team[]>([]);
 
@@ -36,12 +36,16 @@ const useTeamManagement = (initialConferences: ConferenceWithTeams[]) => {
   };
 
   const updateTeam = (updatedTeam: Team) => {
-    setDeletedTeams(prev => prev.filter(team => team.id !== updatedTeam.id));
+    setDeletedTeams((prev) =>
+      prev.filter((team) => team.id !== updatedTeam.id)
+    );
     setConferences((prevConfs) =>
       prevConfs.map((conf) => {
         if (conf.id === updatedTeam.conference) {
-          const teamExists = conf.teams.some(team => team.id === updatedTeam.id);
-          
+          const teamExists = conf.teams.some(
+            (team) => team.id === updatedTeam.id
+          );
+
           if (teamExists) {
             return {
               ...conf,
@@ -58,7 +62,7 @@ const useTeamManagement = (initialConferences: ConferenceWithTeams[]) => {
         }
         return {
           ...conf,
-          teams: conf.teams.filter(team => team.id !== updatedTeam.id)
+          teams: conf.teams.filter((team) => team.id !== updatedTeam.id),
         };
       })
     );
@@ -89,12 +93,13 @@ const useTeamManagement = (initialConferences: ConferenceWithTeams[]) => {
 };
 
 export function App() {
-  const { conferences, moveTeam, updateTeam, deleteTeam, deletedTeams } = useTeamManagement(
-    conferencesData.map((conference) => ({
-      ...conference,
-      teams: teamsData.filter((team) => team.conference === conference.id),
-    }))
-  );
+  const { conferences, moveTeam, updateTeam, deleteTeam, deletedTeams } =
+    useTeamManagement(
+      conferencesData.map((conference) => ({
+        ...conference,
+        teams: teamsData.filter((team) => team.conference === conference.id),
+      }))
+    );
 
   const [highlightedConference, setHighlightedConference] = useState<
     number | null
@@ -255,6 +260,7 @@ export function App() {
         <EditTeamDetailsModal
           team={editModal.team}
           position={editModal.position}
+          conferences={conferences.map((c) => ({ id: c.id, name: c.name }))}
           onSave={(updatedTeam) => {
             updateTeam(updatedTeam);
             setEditModal(null);
@@ -265,8 +271,8 @@ export function App() {
 
       {addTeamModal && (
         <AddTeamModal
-          conferences={conferences.map(c => ({ id: c.id, name: c.name }))}
-          teams={conferences.flatMap(c => c.teams)}
+          conferences={conferences.map((c) => ({ id: c.id, name: c.name }))}
+          teams={conferences.flatMap((c) => c.teams)}
           onSave={(newTeam) => {
             updateTeam(newTeam);
             setAddTeamModal(false);
@@ -290,7 +296,10 @@ export function App() {
         <ConferenceMoveModal
           team={restoreToConfModal.team}
           conferences={conferences}
-          position={{ x: window.innerWidth / 2 - 100, y: window.innerHeight / 2 - 100 }}
+          position={{
+            x: window.innerWidth / 2 - 100,
+            y: window.innerHeight / 2 - 100,
+          }}
           onMove={(confId) => {
             updateTeam({ ...restoreToConfModal.team, conference: confId });
             setRestoreToConfModal(null);
