@@ -181,6 +181,18 @@ export function App() {
     };
   };
 
+  const exportJson = (data: string, filename: string) => {
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-red-700 text-white py-4 px-3 shadow-lg flex justify-between items-center">
@@ -197,6 +209,17 @@ export function App() {
             className="px-4 py-2 bg-white text-red-700 rounded hover:bg-gray-100"
           >
             Restore Teams ({deletedTeams.length})
+          </button>
+          <button
+            onClick={() =>
+              exportJson(
+                JSON.stringify(conferences, null, 2),
+                "conferences.json"
+              )
+            }
+            className="px-4 py-2 bg-white text-red-700 rounded hover:bg-gray-100"
+          >
+            Export to JSON
           </button>
         </div>
       </header>
