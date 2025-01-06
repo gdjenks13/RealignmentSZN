@@ -9,6 +9,7 @@ import { Conference, Team } from "./types/types";
 import { EditTeamDetailsModal } from "./components/modal/EditTeamDetailsModal";
 import { AddTeamModal } from "./components/modal/AddTeamModal";
 import { RestoreTeamsModal } from "./components/modal/RestoreTeamModal";
+import { ExportJSONModal } from "./components/modal/ExportJsonModal";
 
 // Custom hook for team management
 const useTeamManagement = (initialConferences: Conference[]) => {
@@ -121,6 +122,7 @@ export function App() {
   const [restoreToConfModal, setRestoreToConfModal] = useState<{
     team: Team;
   } | null>(null);
+  const [exportModal, setExportModal] = useState(false);
 
   const handleDrop = useCallback(
     ({ source, location }) => {
@@ -211,12 +213,7 @@ export function App() {
             Restore Teams ({deletedTeams.length})
           </button>
           <button
-            onClick={() =>
-              exportJson(
-                JSON.stringify(conferences, null, 2),
-                "conferences.json"
-              )
-            }
+            onClick={() => setExportModal(true)}
             className="px-4 py-2 bg-white text-red-700 rounded hover:bg-gray-100"
           >
             Export to JSON
@@ -329,6 +326,13 @@ export function App() {
           }}
           onClose={() => setRestoreToConfModal(null)}
           isFromRestore={true}
+        />
+      )}
+
+      {exportModal && (
+        <ExportJSONModal
+          conferences={conferences}
+          onClose={() => setExportModal(false)}
         />
       )}
 
