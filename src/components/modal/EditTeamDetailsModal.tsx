@@ -1,4 +1,4 @@
-import { Team, Location } from "../../types/types";
+import { Team } from "../../types/types";
 import { useState, useCallback } from "react";
 import { US_STATES } from "../../data/states";
 
@@ -17,49 +17,25 @@ export function EditTeamDetailsModal({
   onSave,
   onClose,
 }: EditTeamDetailsModalProps) {
-  const [formData, setFormData] = useState<Omit<Team, "id">>({
-    school: team.school,
-    mascot: team.mascot,
-    abbreviation: team.abbreviation,
-    conference: team.conference,
-    division: team.division,
-    color: team.color,
-    alt_color: team.alt_color,
-    logo: team.logo,
-    alt_logo: team.alt_logo,
-    location: { ...team.location },
-    elo: team.elo,
+  const [formData, setFormData] = useState<Omit<Team, "team_id">>({
+    team_name: "",
+    team_nickname: "",
+    team_abbreviation: "",
+    conf_id: 0,
+    primary_color: "#000000",
+    secondary_color: "#FFFFFF",
+    team_logo: "",
+    city: "",
+    state: "",
   });
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
-
-      if (name === "elo") {
-        const numValue = parseInt(value, 10) || 1;
-        const clampedValue = Math.min(Math.max(numValue, 1), 3000);
-        setFormData((prev) => ({ ...prev, elo: clampedValue }));
-        return;
-      }
-
-      if (name.includes(".")) {
-        const [parent, child] = name.split(".") as [keyof Team, keyof Location];
-        setFormData((prev) => ({
-          ...prev,
-          [parent]: {
-            ...(prev[parent] as Location),
-            [child]:
-              child === "latitude" || child === "longitude"
-                ? parseFloat(value) || 0
-                : value,
-          },
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          [name]: name === "conference" ? parseInt(value, 10) || 0 : value,
-        }));
-      }
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name === "conf_id" ? parseInt(value, 10) || 0 : value,
+      }));
     },
     []
   );
@@ -69,7 +45,7 @@ export function EditTeamDetailsModal({
       e.preventDefault();
 
       // Validate required fields
-      const requiredFields = ["school", "mascot", "abbreviation", "conference"];
+      const requiredFields = ["team_name", "team_nickname", "team_abbreviation", "conf_id"];
       const missingFields = requiredFields.filter(
         (field) => !formData[field as keyof typeof formData]
       );
@@ -79,9 +55,9 @@ export function EditTeamDetailsModal({
         return;
       }
 
-      onSave({ id: team.id, ...formData });
+      onSave({ team_id: team.team_id, ...formData });
     },
-    [formData, team.id, onSave]
+    [formData, team.team_id, onSave]
   );
 
   const modalStyle = {
@@ -104,22 +80,22 @@ export function EditTeamDetailsModal({
         <h2 className="text-2xl font-bold mb-4">Edit Team Details</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">School</label>
+          <div>
+              <label className="block text-sm font-medium mb-1">Team Name</label>
               <input
                 type="text"
-                name="school"
-                value={formData.school}
+                name="team_name"
+                value={formData.team_name}
                 onChange={handleInputChange}
                 className="w-full border rounded p-2"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Mascot</label>
+              <label className="block text-sm font-medium mb-1">Nickname</label>
               <input
                 type="text"
-                name="mascot"
-                value={formData.mascot}
+                name="team_nickname"
+                value={formData.team_nickname}
                 onChange={handleInputChange}
                 className="w-full border rounded p-2"
               />
@@ -130,18 +106,8 @@ export function EditTeamDetailsModal({
               </label>
               <input
                 type="text"
-                name="abbreviation"
-                value={formData.abbreviation}
-                onChange={handleInputChange}
-                className="w-full border rounded p-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Division</label>
-              <input
-                type="text"
-                name="division"
-                value={formData.division || ""}
+                name="team_abbreviation"
+                value={formData.team_abbreviation}
                 onChange={handleInputChange}
                 className="w-full border rounded p-2"
               />
@@ -156,16 +122,16 @@ export function EditTeamDetailsModal({
               <div className="flex items-center gap-2">
                 <input
                   type="color"
-                  name="color"
-                  value={formData.color}
+                  name="primary_color"
+                  value={formData.primary_color}
                   onChange={handleInputChange}
                   className="w-12 h-8 p-0 border rounded cursor-pointer"
                 />
                 <input
                   type="text"
-                  value={formData.color}
+                  value={formData.primary_color}
                   onChange={handleInputChange}
-                  name="color"
+                  name="primary_color"
                   className="flex-1 border rounded p-2 uppercase"
                   pattern="^#([A-Fa-f0-9]{6})$"
                   placeholder="#000000"
@@ -174,21 +140,21 @@ export function EditTeamDetailsModal({
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
-                Alternate Color
+                Secondary Color
               </label>
               <div className="flex items-center gap-2">
                 <input
                   type="color"
-                  name="alt_color"
-                  value={formData.alt_color}
+                  name="secondary_color"
+                  value={formData.secondary_color}
                   onChange={handleInputChange}
                   className="w-12 h-8 p-0 border rounded cursor-pointer"
                 />
                 <input
                   type="text"
-                  value={formData.alt_color}
+                  value={formData.secondary_color}
                   onChange={handleInputChange}
-                  name="alt_color"
+                  name="secondary_color"
                   className="flex-1 border rounded p-2 uppercase"
                   pattern="^#([A-Fa-f0-9]{6})$"
                   placeholder="#000000"
@@ -202,20 +168,8 @@ export function EditTeamDetailsModal({
               <label className="block text-sm font-medium mb-1">Logo URL</label>
               <input
                 type="text"
-                name="logo"
-                value={formData.logo}
-                onChange={handleInputChange}
-                className="w-full border rounded p-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Alt Logo URL
-              </label>
-              <input
-                type="text"
-                name="alt_logo"
-                value={formData.alt_logo}
+                name="team_logo"
+                value={formData.team_logo}
                 onChange={handleInputChange}
                 className="w-full border rounded p-2"
               />
@@ -225,25 +179,11 @@ export function EditTeamDetailsModal({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">
-                ELO Rating
-              </label>
-              <input
-                type="number"
-                name="elo"
-                value={formData.elo}
-                onChange={handleInputChange}
-                min={1}
-                max={3000}
-                className="w-full border rounded p-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
                 Conference
               </label>
               <select
-                name="conference"
-                value={formData.conference}
+                name="conf_id"
+                value={formData.conf_id}
                 onChange={handleInputChange}
                 className="w-full border rounded p-2"
                 required
@@ -262,21 +202,11 @@ export function EditTeamDetailsModal({
             <legend className="text-sm font-medium">Location</legend>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
-                <input
-                  type="text"
-                  name="location.name"
-                  value={formData.location.name}
-                  onChange={handleInputChange}
-                  className="w-full border rounded p-2"
-                />
-              </div>
-              <div>
                 <label className="block text-sm font-medium mb-1">City</label>
                 <input
                   type="text"
-                  name="location.city"
-                  value={formData.location.city}
+                  name="city"
+                  value={formData.city}
                   onChange={handleInputChange}
                   className="w-full border rounded p-2"
                 />
@@ -284,8 +214,8 @@ export function EditTeamDetailsModal({
               <div>
                 <label className="block text-sm font-medium mb-1">State</label>
                 <select
-                  name="location.state"
-                  value={formData.location.state}
+                  name="state"
+                  value={formData.state}
                   onChange={handleInputChange}
                   className="w-full border rounded p-2"
                   required
@@ -297,32 +227,6 @@ export function EditTeamDetailsModal({
                     </option>
                   ))}
                 </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Latitude
-                </label>
-                <input
-                  type="number"
-                  step="any"
-                  name="location.latitude"
-                  value={formData.location.latitude}
-                  onChange={handleInputChange}
-                  className="w-full border rounded p-2"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Longitude
-                </label>
-                <input
-                  type="number"
-                  step="any"
-                  name="location.longitude"
-                  value={formData.location.longitude}
-                  onChange={handleInputChange}
-                  className="w-full border rounded p-2"
-                />
               </div>
             </div>
           </fieldset>

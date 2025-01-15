@@ -12,33 +12,26 @@ export function ExportJSONModal({
 }: ExportJSONModalProps) {
   const fieldGroups = {
     Conference: [
-      { key: "id", label: "ID" },
-      { key: "name", label: "Name" },
-      { key: "full_name", label: "Full Name" },
-      { key: "abbreviation", label: "Abbreviation" },
-      { key: "classification", label: "Classification" },
-      { key: "logo", label: "Logo" },
+      { key: "conf_id", label: "ID" },
+      { key: "conf_name", label: "Name" },
+      { key: "conf_longname", label: "Full Name" },
+      { key: "conf_abbreviation", label: "Abbreviation" },
+      { key: "start_year", label: "Start Year" },
+      { key: "end_year", label: "End Year" },
+      { key: "conf_logo", label: "Logo" }
     ],
     Team: [
-      { key: "teams.id", label: "ID" },
-      { key: "teams.school", label: "School" },
-      { key: "teams.mascot", label: "Mascot" },
-      { key: "teams.abbreviation", label: "Abbreviation" },
-      { key: "teams.conference", label: "Conference" },
-      { key: "teams.division", label: "Division" },
-      { key: "teams.color", label: "Color" },
-      { key: "teams.alt_color", label: "Alt Color" },
-      { key: "teams.logo", label: "Logo" },
-      { key: "teams.alt_logo", label: "Alt Logo" },
-      { key: "teams.elo", label: "ELO" },
-    ],
-    Location: [
-      { key: "teams.location.name", label: "Name" },
-      { key: "teams.location.city", label: "City" },
-      { key: "teams.location.state", label: "State" },
-      { key: "teams.location.latitude", label: "Latitude" },
-      { key: "teams.location.longitude", label: "Longitude" },
-    ],
+      { key: "teams.team_id", label: "ID" },
+      { key: "teams.team_name", label: "Team Name" },
+      { key: "teams.team_nickname", label: "Nickname" },
+      { key: "teams.team_abbreviation", label: "Abbreviation" },
+      { key: "teams.conf_id", label: "Conference" },
+      { key: "teams.primary_color", label: "Primary Color" },
+      { key: "teams.secondary_color", label: "Secondary Color" },
+      { key: "teams.team_logo", label: "Logo" },
+      { key: "teams.city", label: "City" },
+      { key: "teams.state", label: "State" }
+    ]
   };
 
   const [selectedFields, setSelectedFields] = useState<Record<string, boolean>>(

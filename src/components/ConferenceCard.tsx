@@ -3,10 +3,9 @@ import { TeamCard } from './TeamCard';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import invariant from 'tiny-invariant';
 import { useEffect, useRef, useState } from 'react';
-import conferencesData from '../data/conferences.json';
 
 interface ConferenceProps {
-  conferenceId: number;
+  conference: Conference;
   teams: Team[];
   highlighted: boolean;
   onDragStart: (conferenceId: number) => void;
@@ -36,8 +35,8 @@ const useDropTarget = (conferenceId: number, teams: Team[], onHoverChange: (isHo
 const ConferenceHeader = ({ conference, teamsCount }: { conference: Conference; teamsCount: number }) => (
   <div className="flex items-center gap-3 mb-4">
     <img 
-      src={conference.logo} 
-      alt={`${conference.name}`}
+      src={conference.conf_logo} 
+      alt={`${conference.conf_name}`}
       className="w-16 h-16 object-contain"
     />
     <div className="flex flex-col">
@@ -49,7 +48,7 @@ const ConferenceHeader = ({ conference, teamsCount }: { conference: Conference; 
 );
 
 export function ConferenceCard({ 
-  conferenceId, 
+  conference,
   teams, 
   highlighted, 
   onDragStart, 
@@ -57,13 +56,8 @@ export function ConferenceCard({
   onTeamClick 
 }: ConferenceProps) {
   const [hovered, setHovered] = useState(false);
-  const conference = conferencesData.find(conf => conf.id === conferenceId) as Conference;
-  
-  if (!conference) {
-    throw new Error(`Conference with id ${conferenceId} not found`);
-  }
 
-  const ref = useDropTarget(conferenceId, teams, setHovered);
+  const ref = useDropTarget(conference.conf_id, teams, setHovered);
 
   const getBackgroundColor = () => {
     if (highlighted) return "bg-red-50";
@@ -76,7 +70,7 @@ export function ConferenceCard({
       ref={ref}
       className={`w-56 p-4 rounded-lg shadow-lg transition-colors ${getBackgroundColor()}`}
       role="region"
-      aria-label={`${conference.name} conference section`}
+      aria-label={`${conference.conf_name} conference section`}
     >
       <ConferenceHeader 
         conference={conference} 
@@ -86,10 +80,10 @@ export function ConferenceCard({
       <div className="space-y-2">
         {teams.map(team => (
           <TeamCard
-            key={team.id}
+            key={team.team_id}
             team={team}
             onTeamClick={onTeamClick}
-            onDragStart={() => onDragStart(conferenceId)}
+            onDragStart={() => onDragStart(conference.conf_id)}
             onDragEnd={onDragEnd}
           />
         ))}

@@ -36,7 +36,7 @@ export function TeamCard({
       getInitialData: () => ({ type: "team", team }),
       onDragStart: () => {
         setDragging(true);
-        onDragStart(team.conference.toString());
+        onDragStart(team.conf_id.toString());
       },
       onDrop: () => {
         setDragging(false);
@@ -45,7 +45,7 @@ export function TeamCard({
     });
   }, [team, onDragStart, onDragEnd]);
 
-  const teamColorRgb = hexToRgb(team.color);
+  const teamColorRgb = hexToRgb(team.primary_color);
 
   return (
     <div
@@ -58,26 +58,26 @@ export function TeamCard({
       style={{ "--team-color-rgb": teamColorRgb } as React.CSSProperties}
     >
       <div className="flex items-center gap-2">
-        {team.logo ? (
+        {team.team_logo ? (
           <img
-            src={team.logo}
-            alt={`${team.school} logo`}
+            src={team.team_logo}
+            alt={`${team.team_name} logo`}
             className="w-8 h-8 object-contain"
           />
         ) : (
           <div
             className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"
-            style={{ backgroundColor: team.color, color: team.alt_color }}
+            style={{ backgroundColor: team.primary_color, color: team.secondary_color }}
           >
             <span className="text-base font-bold">
-              {team.school.charAt(0).toUpperCase()}
+              {team.team_name.charAt(0).toUpperCase()}
             </span>
           </div>
         )}
         <div className={dragging ? "opacity-40" : ""}>
-          <h3 className="font-semibold text-sm">{team.school}</h3>
+          <h3 className="font-semibold text-sm">{team.team_name}</h3>
           <p className="text-xs text-gray-500">
-            {team.location.city}, {team.location.state}
+            {team.city}, {team.state}
           </p>
         </div>
       </div>

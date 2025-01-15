@@ -1,32 +1,23 @@
-export interface Location {
-  name: string;
+export interface Team {
+  team_id: number;
+  team_name: string;
+  team_nickname: string;
+  team_abbreviation: string;
   city: string;
   state: string;
-  latitude: number;
-  longitude: number;
-}
-
-export interface Team {
-  id: number;
-  school: string;
-  mascot: string;
-  abbreviation: string;
-  conference: number;
-  division: string | null;
-  color: string;
-  alt_color: string;
-  logo: string;
-  alt_logo: string;
-  location: Location;
-  elo: number;
+  primary_color: string;
+  secondary_color: string;
+  team_logo: string;
+  conf_id: number;
 }
 
 export interface Conference {
-  id: number;
-  name: string;
-  full_name: string;
-  abbreviation: string;
-  classification: string;
-  logo: string;
+  conf_id: number;
+  conf_name: string;
+  conf_longname: string;
+  conf_abbreviation: string;
+  start_year: number;
+  end_year: number;
+  conf_logo: string;
   teams: Team[];
 }

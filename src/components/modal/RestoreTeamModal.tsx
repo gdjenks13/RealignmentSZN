@@ -23,19 +23,19 @@ export function RestoreTeamsModal({ deletedTeams, onRestore, onClose }: RestoreT
           <div className="space-y-2">
             {deletedTeams.map(team => (
               <div 
-                key={team.id}
+                key={team.team_id}
                 className="flex items-center justify-between p-3 border rounded hover:bg-gray-50 cursor-pointer"
                 onClick={() => onRestore(team)}
               >
                 <div className="flex items-center gap-2">
-                  {team.logo ? (
-                    <img src={team.logo} alt="" className="w-8 h-8" />
+                  {team.team_logo ? (
+                    <img src={team.team_logo} alt="" className="w-8 h-8" />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-sm font-bold">{team.school.charAt(0)}</span>
+                      <span className="text-sm font-bold">{team.team_name.charAt(0)}</span>
                     </div>
                   )}
-                  <span>{team.school}</span>
+                  <span>{team.team_name}</span>
                 </div>
               </div>
             ))}

@@ -17,7 +17,7 @@ export function ConferenceMoveModal({
   onClose,
   isFromRestore = false 
 }: ConferenceMoveModalProps) {
-  const availableConferences = conferences.filter(conf => conf.id !== team.conference);
+  const availableConferences = conferences.filter(conf => conf.conf_id !== team.conf_id);
 
   if (isFromRestore) {
     return (
@@ -29,15 +29,15 @@ export function ConferenceMoveModal({
           className="bg-white rounded-lg p-6 max-w-md w-full"
           onClick={e => e.stopPropagation()}
         >
-          <h2 className="text-2xl font-bold mb-4">Select New Conference</h2>
+          <h2 className="text-2xl font-bold mb-4">Select Conference</h2>
           <div className="space-y-2">
-            {availableConferences.map(conference => (
+            {conferences.map(conf => (
               <div 
-                key={conference.id}
+                key={conf.conf_id}
                 className="flex items-center justify-between p-3 border rounded hover:bg-gray-50 cursor-pointer"
-                onClick={() => onMove(conference.id)}
+                onClick={() => onMove(conf.conf_id)}
               >
-                <span>{conference.name}</span>
+                <span>{conf.conf_name}</span>
               </div>
             ))}
           </div>
@@ -58,11 +58,11 @@ export function ConferenceMoveModal({
         </div>
         {availableConferences.map(conference => (
           <button
-            key={conference.id}
+            key={conference.conf_id}
             className="w-full px-4 py-2 text-left hover:bg-gray-100 transition-colors"
-            onClick={() => onMove(conference.id)}
+            onClick={() => onMove(conference.conf_id)}
           >
-            {conference.name}
+            {conference.conf_name}
           </button>
         ))}
       </div>
