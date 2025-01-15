@@ -9,8 +9,7 @@ import { AddTeamModal } from "./components/modal/AddTeamModal";
 import { RestoreTeamsModal } from "./components/modal/RestoreTeamModal";
 import { ExportJSONModal } from "./components/modal/ExportJsonModal";
 import { fetchAll } from "./data/supabase_setup";
-
-const initialConferences: Conference[] = await fetchAll(2024); // This is a test
+import { YearChangeModal } from "./components/modal/YearChangeModal";
 
 // Custom hook for team management
 const useTeamManagement = (initialConferences: Conference[]) => {
@@ -58,13 +57,17 @@ const useTeamManagement = (initialConferences: Conference[]) => {
           } else {
             return {
               ...conf,
-              teams: [...conf.teams, updatedTeam].sort((a, b) => a.team_id - b.team_id),
+              teams: [...conf.teams, updatedTeam].sort(
+                (a, b) => a.team_id - b.team_id
+              ),
             };
           }
         }
         return {
           ...conf,
-          teams: conf.teams.filter((team) => team.team_id !== updatedTeam.team_id),
+          teams: conf.teams.filter(
+            (team) => team.team_id !== updatedTeam.team_id
+          ),
         };
       })
     );
@@ -72,7 +75,9 @@ const useTeamManagement = (initialConferences: Conference[]) => {
 
   const deleteTeam = (teamId: number) => {
     setConferences((prevConfs) => {
-      const conf = prevConfs.find((c) => c.teams.some((t) => t.team_id === teamId));
+      const conf = prevConfs.find((c) =>
+        c.teams.some((t) => t.team_id === teamId)
+      );
       if (!conf) return prevConfs;
 
       const team = conf.teams.find((t) => t.team_id === teamId);
@@ -95,8 +100,19 @@ const useTeamManagement = (initialConferences: Conference[]) => {
 };
 
 export function App() {
-  const { conferences, moveTeam, updateTeam, deleteTeam, deletedTeams } =
-    useTeamManagement(initialConferences);
+  const [currentYear, setCurrentYear] = useState(2024); // Default to 2024
+  const [conferences, setConferences] = useState<Conference[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await fetchAll(currentYear);
+      setConferences(data);
+    };
+    loadData();
+  }, [currentYear]);
+
+  const { moveTeam, updateTeam, deleteTeam, deletedTeams } =
+    useTeamManagement(conferences);
 
   const [highlightedConference, setHighlightedConference] = useState<
     number | null
@@ -119,6 +135,7 @@ export function App() {
     team: Team;
   } | null>(null);
   const [exportModal, setExportModal] = useState(false);
+  const [yearChangeModal, setYearChangeModal] = useState(false);
 
   const handleDrop = useCallback(
     ({ source, location }) => {
@@ -182,8 +199,19 @@ export function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-red-700 text-white py-4 px-3 shadow-lg flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Realignment Season</h1>
+        <div className="flex items-end gap-2">
+          <h1 className="text-3xl font-bold">Realignment Season</h1>
+          <span className="text-sm opacity-80 mb-1">
+            Starting Year: {currentYear}
+          </span>
+        </div>
         <div className="flex gap-2">
+          <button
+            onClick={() => setYearChangeModal(true)}
+            className="px-4 py-2 font-bold bg-white text-red-700 rounded hover:bg-gray-200 hover:text-red-500"
+          >
+            Change Year
+          </button>
           <button
             onClick={() => setAddTeamModal(true)}
             className="px-4 py-2 font-bold bg-white text-red-700 rounded hover:bg-gray-200 hover:text-red-500"
@@ -264,7 +292,10 @@ export function App() {
         <EditTeamDetailsModal
           team={editModal.team}
           position={editModal.position}
-          conferences={conferences.map((c) => ({ id: c.conf_id, name: c.conf_name }))}
+          conferences={conferences.map((c) => ({
+            id: c.conf_id,
+            name: c.conf_name,
+          }))}
           onSave={(updatedTeam) => {
             updateTeam(updatedTeam);
             setEditModal(null);
@@ -273,9 +304,23 @@ export function App() {
         />
       )}
 
+      {yearChangeModal && (
+        <YearChangeModal
+          currentYear={currentYear}
+          onClose={() => setYearChangeModal(false)}
+          onSubmit={(year) => {
+            setCurrentYear(year);
+            setYearChangeModal(false);
+          }}
+        />
+      )}
+
       {addTeamModal && (
         <AddTeamModal
-          conferences={conferences.map((c) => ({ id: c.conf_id, name: c.conf_name }))}
+          conferences={conferences.map((c) => ({
+            id: c.conf_id,
+            name: c.conf_name,
+          }))}
           teams={conferences.flatMap((c) => c.teams)}
           onSave={(newTeam) => {
             updateTeam(newTeam);

@@ -1,17 +1,17 @@
 # TODO:
 **NOW**
+- Fix Export JSON Button
+- Cache database table information
+- Show all teams not currently in FBS in the "Restore Teams" modal
 - Show / Hide conferences
-    - Maybe show power conferences only. Could be an option
 - Add / Edit / Delete Conferences
     - When adding a conference, allow user to name the conference. Instantiated with no teams
     - Edit conference pop-up shows list of each conference attribute, field to edit each. Save and cancel buttons
     - When deleting a conference, move teams from that conference to independent list
 
 **SOON**
-- Use supabase as the database
 - View a webpage of a single conference, with more information visible
-- Export
-    - .zip with png's of each conference
+    - Export .zip with png's of each conference
 - Drag Teams from one spot in a conference to another (currently they are always alphabetical)
 
 **LATER**
