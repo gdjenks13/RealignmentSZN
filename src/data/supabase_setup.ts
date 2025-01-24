@@ -47,7 +47,6 @@ export const fetchAll = async (year: number): Promise<Conference[]> => {
     const dbTeams = await fetchTeams();
     const dbSeasons = await fetchSeasons(year);
 
-    // Group teams by conference using seasons data
     const conferenceTeams = dbSeasons.reduce((item, season) => {
       if (!item[season.conf_id]) {
         item[season.conf_id] = [];
@@ -63,7 +62,7 @@ export const fetchAll = async (year: number): Promise<Conference[]> => {
           state: team.state || '',
           primary_color: team.primary_color || '',
           secondary_color: team.secondary_color || '',
-          team_logo: team.team_logo || '',
+          team_logo: team.team_logo ? `data:image/svg+xml;base64,${btoa(team.team_logo)}` : '',
           conf_id: season.conf_id
         });
       }
@@ -78,7 +77,7 @@ export const fetchAll = async (year: number): Promise<Conference[]> => {
       conf_abbreviation: conf.conf_abbreviation || '',
       start_year: conf.start_year,
       end_year: conf.end_year || 0,
-      conf_logo: conf.conf_logo || '',
+      conf_logo: conf.conf_logo ? `data:image/svg+xml;base64,${btoa(conf.conf_logo)}` : '',
       teams: conferenceTeams[conf.conf_id] || []
     })).filter(conf => conf.teams.length > 0);
     return conferences;
