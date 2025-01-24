@@ -11,6 +11,30 @@ import { ExportJSONModal } from "./components/modal/ExportJsonModal";
 import { fetchAll } from "./data/supabase_setup";
 import { YearChangeModal } from "./components/modal/YearChangeModal";
 
+const downloadYear = async (year: number) => {
+  const data = await fetchAll(year);
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${year}_season.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
+const downloadAllYears = async (setProgress: (progress: string) => void) => {
+  const years = Array.from({ length: 2024 - 1978 + 1 }, (_, i) => i + 1978);
+  
+  for (const year of years) {
+    setProgress(`Downloading ${year}...`);
+    await downloadYear(year);
+    // Small delay to prevent browser throttling
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+};
+
 // Custom hook for team management
 const useTeamManagement = (initialConferences: Conference[]) => {
   const [conferences, setConferences] = useState(initialConferences);
@@ -136,6 +160,8 @@ export function App() {
   } | null>(null);
   const [exportModal, setExportModal] = useState(false);
   const [yearChangeModal, setYearChangeModal] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState<string>("");
 
   const handleDrop = useCallback(
     ({ source, location }) => {
@@ -196,8 +222,20 @@ export function App() {
     };
   };
 
+  const handleDownloadAllYears = async () => {
+    setIsDownloading(true);
+    try {
+      await downloadAllYears(setDownloadProgress);
+    } catch (error) {
+      console.error('Download failed:', error);
+    } finally {
+      setDownloadProgress("");
+      setIsDownloading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <header className="bg-red-700 text-white py-4 px-3 shadow-lg flex justify-between items-center">
         <div className="flex items-end gap-2">
           <h1 className="text-3xl font-bold">Realignment Season</h1>
@@ -211,6 +249,13 @@ export function App() {
             className="px-4 py-2 font-bold bg-white text-red-700 rounded hover:bg-gray-200 hover:text-red-500"
           >
             Change Year
+          </button>
+          <button
+            onClick={handleDownloadAllYears}
+            disabled={isDownloading}
+            className="px-4 py-2 font-bold bg-white text-red-700 rounded hover:bg-gray-200 hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isDownloading ? downloadProgress : "Download All Years"}
           </button>
           <button
             onClick={() => setAddTeamModal(true)}

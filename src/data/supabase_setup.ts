@@ -41,7 +41,21 @@ export const fetchSeasons = async (year: number): Promise<dbSeason[]> => {
   return seasons;
 };
 
+const loadFromFile = async (year: number): Promise<Conference[] | null> => {
+  try {
+    const data = await import(`../data/seasons/${year}_season.json`);
+    return data.default as Conference[];
+  } catch (error) {
+    return null;
+  }
+};
+
 export const fetchAll = async (year: number): Promise<Conference[]> => {
+  const fileData = await loadFromFile(year);
+  if (fileData) {
+    return fileData;
+  }
+
   try {
     const dbConferences = await fetchConferences();
     const dbTeams = await fetchTeams();
