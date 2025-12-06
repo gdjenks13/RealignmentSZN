@@ -87,26 +87,48 @@ const parseCSV = <T>(csvContent: string): T[] => {
 const loadConferencesMaster = (): Map<number, RawConference> => {
   if (conferencesCache) return conferencesCache;
 
-  const conferences = parseCSV<RawConference>(conferencesCSV);
-  conferencesCache = new Map();
-  conferences.forEach((conf) => {
-    conferencesCache!.set(conf.conf_id, conf);
-  });
+  try {
+    if (!conferencesCSV || typeof conferencesCSV !== 'string') {
+      console.error('Conferences CSV not loaded properly:', conferencesCSV);
+      throw new Error('Conferences CSV failed to import');
+    }
 
-  return conferencesCache;
+    const conferences = parseCSV<RawConference>(conferencesCSV);
+    conferencesCache = new Map();
+    conferences.forEach((conf) => {
+      conferencesCache!.set(conf.conf_id, conf);
+    });
+
+    console.log(`Loaded ${conferences.length} conferences from CSV`);
+    return conferencesCache;
+  } catch (error) {
+    console.error('Error loading conferences master data:', error);
+    throw error;
+  }
 };
 
 // Load master teams data (parsed from imported CSV)
 const loadTeamsMaster = (): Map<number, RawTeam> => {
   if (teamsCache) return teamsCache;
 
-  const teams = parseCSV<RawTeam>(teamsCSV);
-  teamsCache = new Map();
-  teams.forEach((team) => {
-    teamsCache!.set(team.team_id, team);
-  });
+  try {
+    if (!teamsCSV || typeof teamsCSV !== 'string') {
+      console.error('Teams CSV not loaded properly:', teamsCSV);
+      throw new Error('Teams CSV failed to import');
+    }
 
-  return teamsCache;
+    const teams = parseCSV<RawTeam>(teamsCSV);
+    teamsCache = new Map();
+    teams.forEach((team) => {
+      teamsCache!.set(team.team_id, team);
+    });
+
+    console.log(`Loaded ${teams.length} teams from CSV`);
+    return teamsCache;
+  } catch (error) {
+    console.error('Error loading teams master data:', error);
+    throw error;
+  }
 };
 
 // Initialize IndexedDB
