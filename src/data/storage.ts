@@ -1,9 +1,113 @@
-import { Conference } from "../types/types";
+import { Conference, Team } from "../types/types";
+import conferencesCSV from "./conferences.csv?raw";
+import teamsCSV from "./teams.csv?raw";
 
 const DB_NAME = "realignment_db";
-const DB_VERSION = 1;
+const DB_VERSION = 2; // Bump version to add custom conferences store
 const CONFERENCES_STORE = "conferences";
 const USER_CHANGES_STORE = "user_changes";
+const CUSTOM_CONFERENCES_STORE = "custom_conferences";
+
+// Raw data types from CSV/JSON files
+interface RawConference {
+  conf_id: number;
+  conf_name: string;
+  conf_longname: string;
+  conf_abbreviation: string;
+  start_year: number;
+  end_year: number;
+  conf_logo: string;
+}
+
+interface RawTeam {
+  team_id: number;
+  team_name: string;
+  team_nickname: string;
+  team_abbreviation: string;
+  city: string;
+  state: string;
+  primary_color: string;
+  secondary_color: string;
+  team_logo: string;
+}
+
+interface SeasonEntry {
+  conf_id: number;
+  teams: number[];
+}
+
+// Cache for master data (loaded once)
+let conferencesCache: Map<number, RawConference> | null = null;
+let teamsCache: Map<number, RawTeam> | null = null;
+
+// Parse CSV content into array of objects
+const parseCSV = <T>(csvContent: string): T[] => {
+  const lines = csvContent.trim().split("\n");
+  if (lines.length < 2) return [];
+
+  const headers = lines[0].split(",").map((h) => h.trim());
+  const results: T[] = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    const values: string[] = [];
+    let current = "";
+    let inQuotes = false;
+
+    // Parse CSV with proper quote handling for base64 logos
+    for (let j = 0; j < line.length; j++) {
+      const char = line[j];
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === "," && !inQuotes) {
+        values.push(current.trim());
+        current = "";
+      } else {
+        current += char;
+      }
+    }
+    values.push(current.trim());
+
+    const obj: Record<string, unknown> = {};
+    headers.forEach((header, index) => {
+      let value: unknown = values[index] || "";
+      // Convert numeric fields
+      if (["conf_id", "team_id", "start_year", "end_year"].includes(header)) {
+        value = parseInt(value as string, 10) || 0;
+      }
+      obj[header] = value;
+    });
+    results.push(obj as T);
+  }
+
+  return results;
+};
+
+// Load master conferences data (parsed from imported CSV)
+const loadConferencesMaster = (): Map<number, RawConference> => {
+  if (conferencesCache) return conferencesCache;
+
+  const conferences = parseCSV<RawConference>(conferencesCSV);
+  conferencesCache = new Map();
+  conferences.forEach((conf) => {
+    conferencesCache!.set(conf.conf_id, conf);
+  });
+
+  return conferencesCache;
+};
+
+// Load master teams data (parsed from imported CSV)
+const loadTeamsMaster = (): Map<number, RawTeam> => {
+  if (teamsCache) return teamsCache;
+
+  const teams = parseCSV<RawTeam>(teamsCSV);
+  teamsCache = new Map();
+  teams.forEach((team) => {
+    teamsCache!.set(team.team_id, team);
+  });
+
+  return teamsCache;
+};
 
 // Initialize IndexedDB
 const openDB = (): Promise<IDBDatabase> => {
@@ -30,6 +134,11 @@ const openDB = (): Promise<IDBDatabase> => {
         userStore.createIndex("year", "year", { unique: false });
         userStore.createIndex("type", "type", { unique: false });
       }
+
+      // Store for custom conferences (user-created from scratch)
+      if (!db.objectStoreNames.contains(CUSTOM_CONFERENCES_STORE)) {
+        db.createObjectStore(CUSTOM_CONFERENCES_STORE, { keyPath: "id" });
+      }
     };
   });
 };
@@ -49,12 +158,51 @@ interface SavedConferenceData {
   savedAt: number;
 }
 
-// Load from local JSON files
+// Load from local JSON files and combine with master data
 const loadFromFile = async (year: number): Promise<Conference[] | null> => {
   try {
-    const data = await import(`../data/seasons/${year}_season.json`);
-    return data.default as Conference[];
-  } catch {
+    // Load master data (synchronous, uses cached imports)
+    const conferencesMaster = loadConferencesMaster();
+    const teamsMaster = loadTeamsMaster();
+
+    // Load season data
+    const seasonData = await import(`../data/seasons/${year}_season.json`);
+    const seasonEntries = seasonData.default as SeasonEntry[];
+
+    // Build full conference objects with teams
+    const conferences: Conference[] = seasonEntries
+      .map((entry) => {
+        const confData = conferencesMaster.get(entry.conf_id);
+        if (!confData) {
+          console.warn(`Conference ${entry.conf_id} not found in master data`);
+          return null;
+        }
+
+        // Build team objects for this conference
+        const teams: Team[] = entry.teams
+          .map((teamId) => {
+            const teamData = teamsMaster.get(teamId);
+            if (!teamData) {
+              console.warn(`Team ${teamId} not found in master data`);
+              return null;
+            }
+            return {
+              ...teamData,
+              conf_id: entry.conf_id,
+            } as Team;
+          })
+          .filter((t): t is Team => t !== null);
+
+        return {
+          ...confData,
+          teams,
+        } as Conference;
+      })
+      .filter((c): c is Conference => c !== null);
+
+    return conferences;
+  } catch (error) {
+    console.error(`Failed to load data for year ${year}:`, error);
     return null;
   }
 };
@@ -210,5 +358,84 @@ export const getModifiedYears = async (): Promise<number[]> => {
   });
 };
 
+// Custom Conferences Storage
+interface CustomConferencesData {
+  id: string; // Always "current" for single save
+  conferences: Conference[];
+  savedAt: number;
+}
+
+// Save custom conferences to IndexedDB
+export const saveCustomConferences = async (
+  conferences: Conference[]
+): Promise<void> => {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([CUSTOM_CONFERENCES_STORE], "readwrite");
+    const store = transaction.objectStore(CUSTOM_CONFERENCES_STORE);
+
+    const data: CustomConferencesData = {
+      id: "current",
+      conferences,
+      savedAt: Date.now(),
+    };
+
+    const request = store.put(data);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+};
+
+// Load custom conferences from IndexedDB
+export const loadCustomConferences = async (): Promise<Conference[] | null> => {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([CUSTOM_CONFERENCES_STORE], "readonly");
+    const store = transaction.objectStore(CUSTOM_CONFERENCES_STORE);
+    const request = store.get("current");
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const result = request.result as CustomConferencesData | undefined;
+      resolve(result?.conferences || null);
+    };
+  });
+};
+
+// Check if we have saved custom conferences
+export const hasCustomConferences = async (): Promise<boolean> => {
+  const data = await loadCustomConferences();
+  return data !== null;
+};
+
+// Clear custom conferences
+export const clearCustomConferences = async (): Promise<void> => {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([CUSTOM_CONFERENCES_STORE], "readwrite");
+    const store = transaction.objectStore(CUSTOM_CONFERENCES_STORE);
+    const request = store.delete("current");
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+};
+
+// Export master data accessors for use in components
+export const getAllConferences = (): RawConference[] => {
+  const map = loadConferencesMaster();
+  return Array.from(map.values());
+};
+
+export const getAllTeams = (): RawTeam[] => {
+  const map = loadTeamsMaster();
+  return Array.from(map.values());
+};
+
 // Export functions for potential use in components
-export { type UserChange, type SavedConferenceData };
+export {
+  type UserChange,
+  type SavedConferenceData,
+  type RawConference,
+  type RawTeam,
+};

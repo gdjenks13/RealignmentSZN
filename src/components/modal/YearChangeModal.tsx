@@ -43,12 +43,12 @@ export function YearChangeModal({
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">
-              Select Year (1978-2024):
+              Select Year (1978-2025):
             </label>
             <input
               type="number"
               min={1978}
-              max={2024}
+              max={2025}
               value={year}
               onChange={(e) => {
                 setYear(Number(e.target.value));
