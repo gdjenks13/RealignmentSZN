@@ -88,9 +88,9 @@ const loadConferencesMaster = (): Map<number, RawConference> => {
   if (conferencesCache) return conferencesCache;
 
   try {
-    if (!conferencesCSV || typeof conferencesCSV !== 'string') {
-      console.error('Conferences CSV not loaded properly:', conferencesCSV);
-      throw new Error('Conferences CSV failed to import');
+    if (!conferencesCSV || typeof conferencesCSV !== "string") {
+      console.error("Conferences CSV not loaded properly:", conferencesCSV);
+      throw new Error("Conferences CSV failed to import");
     }
 
     const conferences = parseCSV<RawConference>(conferencesCSV);
@@ -102,7 +102,7 @@ const loadConferencesMaster = (): Map<number, RawConference> => {
     console.log(`Loaded ${conferences.length} conferences from CSV`);
     return conferencesCache;
   } catch (error) {
-    console.error('Error loading conferences master data:', error);
+    console.error("Error loading conferences master data:", error);
     throw error;
   }
 };
@@ -112,9 +112,9 @@ const loadTeamsMaster = (): Map<number, RawTeam> => {
   if (teamsCache) return teamsCache;
 
   try {
-    if (!teamsCSV || typeof teamsCSV !== 'string') {
-      console.error('Teams CSV not loaded properly:', teamsCSV);
-      throw new Error('Teams CSV failed to import');
+    if (!teamsCSV || typeof teamsCSV !== "string") {
+      console.error("Teams CSV not loaded properly:", teamsCSV);
+      throw new Error("Teams CSV failed to import");
     }
 
     const teams = parseCSV<RawTeam>(teamsCSV);
@@ -126,7 +126,7 @@ const loadTeamsMaster = (): Map<number, RawTeam> => {
     console.log(`Loaded ${teams.length} teams from CSV`);
     return teamsCache;
   } catch (error) {
-    console.error('Error loading teams master data:', error);
+    console.error("Error loading teams master data:", error);
     throw error;
   }
 };
