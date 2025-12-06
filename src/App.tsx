@@ -8,13 +8,28 @@ import { EditTeamDetailsModal } from "./components/modal/EditTeamDetailsModal";
 import { AddTeamModal } from "./components/modal/AddTeamModal";
 import { RestoreTeamsModal } from "./components/modal/RestoreTeamModal";
 import { ExportJSONModal } from "./components/modal/ExportJsonModal";
-import { fetchAll } from "./data/supabase_setup";
+import {
+  fetchAll,
+  autoSave,
+  clearSavedData,
+  hasSavedData,
+} from "./data/storage";
 import { YearChangeModal } from "./components/modal/YearChangeModal";
 
 // Custom hook for team management
-const useTeamManagement = (initialConferences: Conference[]) => {
+const useTeamManagement = (
+  initialConferences: Conference[],
+  onConferencesChange?: (conferences: Conference[]) => void
+) => {
   const [conferences, setConferences] = useState(initialConferences);
   const [deletedTeams, setDeletedTeams] = useState<Team[]>([]);
+
+  // Notify parent when conferences change
+  useEffect(() => {
+    if (onConferencesChange && conferences.length > 0) {
+      onConferencesChange(conferences);
+    }
+  }, [conferences, onConferencesChange]);
 
   const moveTeam = (teamId: number, newConfId: number) => {
     setConferences((prevConfs) => {
@@ -111,8 +126,13 @@ export function App() {
     loadData();
   }, [currentYear]);
 
-  const { moveTeam, updateTeam, deleteTeam, deletedTeams } =
-    useTeamManagement(conferences);
+  const { moveTeam, updateTeam, deleteTeam, deletedTeams } = useTeamManagement(
+    conferences,
+    (updatedConferences) => {
+      // Auto-save to IndexedDB when conferences change
+      autoSave(currentYear, updatedConferences);
+    }
+  );
 
   const [highlightedConference, setHighlightedConference] = useState<
     number | null
@@ -136,6 +156,12 @@ export function App() {
   } | null>(null);
   const [exportModal, setExportModal] = useState(false);
   const [yearChangeModal, setYearChangeModal] = useState(false);
+  const [hasModifications, setHasModifications] = useState(false);
+
+  // Check if current year has saved modifications
+  useEffect(() => {
+    hasSavedData(currentYear).then(setHasModifications);
+  }, [currentYear, conferences]);
 
   const handleDrop = useCallback(
     ({ source, location }) => {
@@ -230,6 +256,25 @@ export function App() {
           >
             Export to JSON
           </button>
+          {hasModifications && (
+            <button
+              onClick={async () => {
+                if (
+                  confirm(
+                    `Reset ${currentYear} to original data? Your changes will be lost.`
+                  )
+                ) {
+                  await clearSavedData(currentYear);
+                  const data = await fetchAll(currentYear);
+                  setConferences(data);
+                  setHasModifications(false);
+                }
+              }}
+              className="px-4 py-2 font-bold bg-yellow-600 text-white rounded hover:bg-yellow-700"
+            >
+              Reset to Original
+            </button>
+          )}
         </div>
       </header>
 
