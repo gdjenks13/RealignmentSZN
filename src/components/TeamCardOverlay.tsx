@@ -1,10 +1,7 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { Team } from "../types/types";
 
-interface TeamProps {
+interface TeamCardOverlayProps {
   team: Team;
-  onTeamClick: (e: React.MouseEvent, team: Team) => void;
 }
 
 function hexToRgb(hex: string) {
@@ -15,40 +12,19 @@ function hexToRgb(hex: string) {
   return `${r}, ${g}, ${b}`;
 }
 
-export function TeamCard({ team, onTeamClick }: TeamProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
-    id: `team-${team.team_id}`,
-    data: { team, type: "team" },
-  });
-
+export function TeamCardOverlay({ team }: TeamCardOverlayProps) {
   const teamColorRgb = hexToRgb(team.primary_color);
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    "--team-color-rgb": teamColorRgb,
-  } as React.CSSProperties;
 
   return (
     <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      onClick={(e) => {
-        e.stopPropagation();
-        onTeamClick(e, team);
-      }}
-      className={`team-card p-3 rounded-md cursor-pointer ${
-        isDragging ? "opacity-50 z-50" : ""
-      }`}
-      style={style}
+      className="team-card p-3 rounded-md cursor-grabbing opacity-80 shadow-xl"
+      style={
+        {
+          "--team-color-rgb": teamColorRgb,
+          backgroundColor: "white",
+          width: "200px",
+        } as React.CSSProperties
+      }
     >
       <div className="flex items-center gap-2">
         {team.team_logo ? (

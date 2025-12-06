@@ -1,4 +1,15 @@
-import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+} from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { ConferenceCard } from "./components/ConferenceCard";
 import { TeamModal } from "./components/modal/TeamModal";
 import { ConferenceMoveModal } from "./components/modal/ConferenceMoveModal";
@@ -15,103 +26,133 @@ import {
   hasSavedData,
 } from "./data/storage";
 import { YearChangeModal } from "./components/modal/YearChangeModal";
+import { TeamCardOverlay } from "./components/TeamCardOverlay";
 
-// Custom hook for team management
+// Custom hook for team management - now accepts setConferences to update parent state
 const useTeamManagement = (
-  initialConferences: Conference[],
-  onConferencesChange?: (conferences: Conference[]) => void
+  _conferences: Conference[],
+  setConferences: React.Dispatch<React.SetStateAction<Conference[]>>
 ) => {
-  const [conferences, setConferences] = useState(initialConferences);
   const [deletedTeams, setDeletedTeams] = useState<Team[]>([]);
 
-  // Notify parent when conferences change
-  useEffect(() => {
-    if (onConferencesChange && conferences.length > 0) {
-      onConferencesChange(conferences);
-    }
-  }, [conferences, onConferencesChange]);
+  const moveTeam = useCallback(
+    (teamId: number, newConfId: number, insertIndex?: number) => {
+      setConferences((prevConfs) => {
+        const team = prevConfs
+          .flatMap((conf) => conf.teams)
+          .find((t) => t.team_id === teamId);
+        if (!team) return prevConfs;
 
-  const moveTeam = (teamId: number, newConfId: number) => {
-    setConferences((prevConfs) => {
-      const team = prevConfs
-        .flatMap((conf) => conf.teams)
-        .find((t) => t.team_id === teamId);
-      if (!team) return prevConfs;
+        return prevConfs.map((conf) => {
+          if (conf.conf_id === newConfId) {
+            // Add team to new conference
+            const filteredTeams = conf.teams.filter(
+              (t) => t.team_id !== teamId
+            );
+            const updatedTeam = { ...team, conf_id: newConfId };
 
-      return prevConfs.map((conf) => ({
-        ...conf,
-        teams:
-          conf.conf_id === newConfId
-            ? [
-                ...conf.teams.filter((t) => t.team_id !== teamId),
-                { ...team, conference: newConfId },
-              ].sort((a, b) => a.team_id - b.team_id)
-            : conf.teams.filter((t) => t.team_id !== teamId),
-      }));
-    });
-  };
-
-  const updateTeam = (updatedTeam: Team) => {
-    setDeletedTeams((prev) =>
-      prev.filter((team) => team.team_id !== updatedTeam.team_id)
-    );
-    setConferences((prevConfs) =>
-      prevConfs.map((conf) => {
-        if (conf.conf_id === updatedTeam.conf_id) {
-          const teamExists = conf.teams.some(
-            (team) => team.team_id === updatedTeam.team_id
-          );
-
-          if (teamExists) {
-            return {
-              ...conf,
-              teams: conf.teams.map((team) =>
-                team.team_id === updatedTeam.team_id ? updatedTeam : team
-              ),
-            };
+            if (insertIndex !== undefined) {
+              // Insert at specific position
+              const newTeams = [...filteredTeams];
+              newTeams.splice(insertIndex, 0, updatedTeam);
+              return { ...conf, teams: newTeams };
+            } else {
+              // Add to end
+              return { ...conf, teams: [...filteredTeams, updatedTeam] };
+            }
           } else {
+            // Remove team from other conferences
             return {
               ...conf,
-              teams: [...conf.teams, updatedTeam].sort(
-                (a, b) => a.team_id - b.team_id
-              ),
+              teams: conf.teams.filter((t) => t.team_id !== teamId),
             };
           }
-        }
-        return {
-          ...conf,
-          teams: conf.teams.filter(
-            (team) => team.team_id !== updatedTeam.team_id
-          ),
-        };
-      })
-    );
-  };
-
-  const deleteTeam = (teamId: number) => {
-    setConferences((prevConfs) => {
-      const conf = prevConfs.find((c) =>
-        c.teams.some((t) => t.team_id === teamId)
-      );
-      if (!conf) return prevConfs;
-
-      const team = conf.teams.find((t) => t.team_id === teamId);
-      if (team) {
-        setDeletedTeams((prev) => {
-          const exists = prev.some((t) => t.team_id === team.team_id);
-          if (exists) return prev;
-          return [...prev, { ...team, conference: -1 }];
         });
-      }
+      });
+    },
+    [setConferences]
+  );
 
-      return prevConfs.map((c) => ({
-        ...c,
-        teams: c.teams.filter((t) => t.team_id !== teamId),
-      }));
-    });
-  };
+  const reorderTeam = useCallback(
+    (confId: number, oldIndex: number, newIndex: number) => {
+      setConferences((prevConfs) => {
+        return prevConfs.map((conf) => {
+          if (conf.conf_id === confId) {
+            const newTeams = arrayMove(conf.teams, oldIndex, newIndex);
+            return { ...conf, teams: newTeams };
+          }
+          return conf;
+        });
+      });
+    },
+    [setConferences]
+  );
 
-  return { conferences, moveTeam, updateTeam, deleteTeam, deletedTeams };
+  const updateTeam = useCallback(
+    (updatedTeam: Team) => {
+      setDeletedTeams((prev) =>
+        prev.filter((team) => team.team_id !== updatedTeam.team_id)
+      );
+      setConferences((prevConfs) =>
+        prevConfs.map((conf) => {
+          if (conf.conf_id === updatedTeam.conf_id) {
+            const teamExists = conf.teams.some(
+              (team) => team.team_id === updatedTeam.team_id
+            );
+
+            if (teamExists) {
+              return {
+                ...conf,
+                teams: conf.teams.map((team) =>
+                  team.team_id === updatedTeam.team_id ? updatedTeam : team
+                ),
+              };
+            } else {
+              return {
+                ...conf,
+                teams: [...conf.teams, updatedTeam],
+              };
+            }
+          }
+          return {
+            ...conf,
+            teams: conf.teams.filter(
+              (team) => team.team_id !== updatedTeam.team_id
+            ),
+          };
+        })
+      );
+    },
+    [setConferences]
+  );
+
+  const deleteTeam = useCallback(
+    (teamId: number) => {
+      setConferences((prevConfs) => {
+        const conf = prevConfs.find((c) =>
+          c.teams.some((t) => t.team_id === teamId)
+        );
+        if (!conf) return prevConfs;
+
+        const team = conf.teams.find((t) => t.team_id === teamId);
+        if (team) {
+          setDeletedTeams((prev) => {
+            const exists = prev.some((t) => t.team_id === team.team_id);
+            if (exists) return prev;
+            return [...prev, { ...team, conf_id: -1 }];
+          });
+        }
+
+        return prevConfs.map((c) => ({
+          ...c,
+          teams: c.teams.filter((t) => t.team_id !== teamId),
+        }));
+      });
+    },
+    [setConferences]
+  );
+
+  return { moveTeam, reorderTeam, updateTeam, deleteTeam, deletedTeams };
 };
 
 export function App() {
@@ -126,17 +167,20 @@ export function App() {
     loadData();
   }, [currentYear]);
 
-  const { moveTeam, updateTeam, deleteTeam, deletedTeams } = useTeamManagement(
-    conferences,
-    (updatedConferences) => {
-      // Auto-save to IndexedDB when conferences change
-      autoSave(currentYear, updatedConferences);
-    }
-  );
+  const { moveTeam, reorderTeam, updateTeam, deleteTeam, deletedTeams } =
+    useTeamManagement(conferences, setConferences);
 
-  const [highlightedConference, setHighlightedConference] = useState<
-    number | null
-  >(null);
+  // Auto-save to IndexedDB when conferences change
+  useEffect(() => {
+    if (conferences.length > 0) {
+      autoSave(currentYear, conferences);
+    }
+  }, [conferences, currentYear]);
+
+  // Track the active dragging team for the overlay
+  const [activeTeam, setActiveTeam] = useState<Team | null>(null);
+
+  const [overConferenceId, setOverConferenceId] = useState<number | null>(null);
   const [teamModal, setTeamModal] = useState<{
     team: Team;
     position: { x: number; y: number };
@@ -163,19 +207,82 @@ export function App() {
     hasSavedData(currentYear).then(setHasModifications);
   }, [currentYear, conferences]);
 
-  const handleDrop = useCallback(
-    ({ source, location }) => {
-      if (!location.current.dropTargets.length || source.data.type !== "team")
-        return;
-      const newConfId = location.current.dropTargets[0].data.conferenceId;
-      moveTeam(source.data.team.team_id, newConfId);
-    },
-    [moveTeam]
+  // DnD Kit sensors - require a small drag distance before activating
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
   );
 
-  useEffect(() => {
-    return monitorForElements({ onDrop: handleDrop });
-  }, [handleDrop]);
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const team = event.active.data.current?.team as Team | undefined;
+    setActiveTeam(team ?? null);
+  }, []);
+
+  const handleDragOver = useCallback((event: DragOverEvent) => {
+    const { over } = event;
+    if (over) {
+      const confId = over.data.current?.conferenceId as number | undefined;
+      setOverConferenceId(confId ?? null);
+    } else {
+      setOverConferenceId(null);
+    }
+  }, []);
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+
+      setOverConferenceId(null);
+      setActiveTeam(null);
+
+      if (!over) return;
+
+      const activeData = active.data.current;
+      const overData = over.data.current;
+      const draggedTeam = activeData?.team as Team | undefined;
+
+      if (!draggedTeam) return;
+
+      // Check if dropping on a conference
+      const targetConfId = overData?.conferenceId as number | undefined;
+      // Check if dropping on another team
+      const overTeam = overData?.team as Team | undefined;
+
+      if (overTeam) {
+        // Dropping on another team
+        const targetConf = conferences.find((c) =>
+          c.teams.some((t) => t.team_id === overTeam.team_id)
+        );
+        if (!targetConf) return;
+
+        if (draggedTeam.conf_id === targetConf.conf_id) {
+          // Same conference - reorder
+          const oldIndex = targetConf.teams.findIndex(
+            (t) => t.team_id === draggedTeam.team_id
+          );
+          const newIndex = targetConf.teams.findIndex(
+            (t) => t.team_id === overTeam.team_id
+          );
+          if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+            reorderTeam(targetConf.conf_id, oldIndex, newIndex);
+          }
+        } else {
+          // Different conference - move to the position of the target team
+          const insertIndex = targetConf.teams.findIndex(
+            (t) => t.team_id === overTeam.team_id
+          );
+          moveTeam(draggedTeam.team_id, targetConf.conf_id, insertIndex);
+        }
+      } else if (targetConfId && draggedTeam.conf_id !== targetConfId) {
+        // Dropping on a conference (not a team) - move to end
+        moveTeam(draggedTeam.team_id, targetConfId);
+      }
+    },
+    [moveTeam, reorderTeam, conferences]
+  );
 
   useEffect(() => {
     // Only run if either modal is open
@@ -279,22 +386,32 @@ export function App() {
       </header>
 
       <main className="max-w-fit mx-auto py-4 px-2">
-        <div className="flex flex-wrap justify-center gap-4">
-          {conferences.map((conference) => (
-            <ConferenceCard
-              key={conference.conf_id}
-              conference={conference}
-              teams={conference.teams}
-              highlighted={highlightedConference === conference.conf_id}
-              onDragStart={() => setHighlightedConference(conference.conf_id)}
-              onDragEnd={() => setHighlightedConference(null)}
-              onTeamClick={(e, team) => {
-                setMoveModal(null); // Close ConferenceMoveModal first
-                setTeamModal({ team, position: calculateModalPosition(e) });
-              }}
-            />
-          ))}
-        </div>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="flex flex-wrap justify-center gap-4">
+            {conferences.map((conference) => (
+              <ConferenceCard
+                key={conference.conf_id}
+                conference={conference}
+                teams={conference.teams}
+                isOver={overConferenceId === conference.conf_id}
+                onTeamClick={(e, team) => {
+                  setMoveModal(null); // Close ConferenceMoveModal first
+                  setTeamModal({ team, position: calculateModalPosition(e) });
+                }}
+              />
+            ))}
+          </div>
+
+          <DragOverlay>
+            {activeTeam ? <TeamCardOverlay team={activeTeam} /> : null}
+          </DragOverlay>
+        </DndContext>
       </main>
 
       {teamModal && (
