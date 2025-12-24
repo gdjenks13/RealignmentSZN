@@ -42,6 +42,13 @@ jobs:
       - name: Build
         run: bun run build
 
+      - name: Verify build output
+        run: |
+          echo "Contents of dist folder:"
+          ls -la ./dist
+          echo "Contents of dist/index.html:"
+          cat ./dist/index.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
